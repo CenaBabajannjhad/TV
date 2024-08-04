@@ -29,23 +29,16 @@ body {
   height: 200vh;
   overflow-x: hidden;
 }
-.body-darkmode{
-    background: var(--gray);
+.body-darkmode {
+  background: var(--gray);
 }
-.none{
+.none {
   display: none;
 }
-.block{
-  display: block;
+.overflow-hidden {
+  overflow: hidden;
 }
 /* utilities */
-.border-white {
-  /* i use this for debugging */
-  border: 2px solid white;
-}
-.border-dark {
-  border: 2px solid rgb(0, 0, 0);
-}
 .container {
   width: 100%;
   margin: 0px auto;
@@ -63,7 +56,8 @@ header {
   top: 0;
   padding-top: 20px;
   padding-bottom: 20px;
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
+    rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
 }
 .header-container {
   display: flex;
@@ -73,7 +67,7 @@ header {
 .logo {
   width: 100px;
 }
-.navbar-wrapper {
+.nav-wrapper {
   display: flex;
   align-items: center;
 }
@@ -99,14 +93,14 @@ header {
   padding-top: 180px;
 }
 /* close navbar btn */
-.navbar-close{
-    position: fixed;
-    top: 20px;
-    right: 20px;   
+.navbar-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
 }
-.navbar-close-btn-img{
-    width: 30px;
-    height: 30px;
+.navbar-close-btn-img {
+  width: 30px;
+  height: 30px;
 }
 /* home */
 .home-li {
@@ -142,6 +136,7 @@ header {
   width: var(--sidenavbar-input-width);
   padding: 15px 5px 15px 15px;
   border-radius: var(--border-radius-value);
+  border: none;
 }
 .movies-option:focus {
   outline: none;
@@ -151,6 +146,7 @@ header {
   width: var(--sidenavbar-input-width);
   padding: 15px 5px 15px 15px;
   border-radius: var(--border-radius-value);
+  border: none;
 }
 .episode-option:focus {
   outline: none;
@@ -178,14 +174,82 @@ header {
 }
 /* lg */
 @media screen and (min-width: 1024px) {
+  :root {
+    --sidenavbar-input-width: 200px;
+    --border-radius-value: 5px;
+  }
   .container {
     max-width: 1024px;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+  .navbar-close-btn-img {
+    display: none;
+  }
+  .hamburger {
+    display: none;
+  }
+  .darkmode-wrapper {
+    order: 1;
+    margin-left: 20px;
+  }
+  .Navbar-wrapper {
+    display: flex;
+    align-items: center;
+    position: static;
+    transform: translate(0);
+    background: none;
+    backdrop-filter: none;
+    padding-top: 0;
+  }
+  .Navbar-wrapper > li {
+    margin-left: 20px;
+  }
+  .nav-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .home-link {
+    font-size: 1rem !important;
+  }
+  .home-li {
+    margin-bottom: 0px;
+  }
+  .input-li {
+    margin-bottom: 0px;
+  }
+  .movies-option-li {
+    margin-bottom: 0px;
+  }
+  .search-input {
+    width: var(--sidenavbar-input-width);
+    padding: 8px 8px 8px 10px;
+    border-radius: var(--border-radius-value);
+    border: none;
+    text-transform: capitalize;
+    background: #b2b2b2;
+  }
+  .movies-option {
+    width: var(--sidenavbar-input-width);
+    padding: 8px 8px 8px 10px;
+    border-radius: var(--border-radius-value);
+    border: none;
+    background: #b2b2b2;
+  }
+  .episode-option {
+    width: var(--sidenavbar-input-width);
+    padding: 8px 8px 8px 10px;
+    border-radius: var(--border-radius-value);
+    border: none;
+    background: #b2b2b2;
   }
 }
 /* xl */
 @media screen and (min-width: 1280px) {
   .container {
     max-width: 1280px;
+    padding-right: 50px;
+    padding-left: 50px;
   }
 }
 
@@ -193,5 +257,7 @@ header {
 @media screen and (min-width: 1536px) {
   .container {
     max-width: 1536px;
+    padding-right: 100px;
+    padding-left: 100px;
   }
 }

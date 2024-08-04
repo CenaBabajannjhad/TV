@@ -18,12 +18,14 @@ let unMount = (element) => {
 let showSideNavbar = (element, target, className) => {
   element.addEventListener("click", () => {
     target.classList.add(className);
+    root.parentElement.classList.add('overflow-hidden')
   });
 };
 // remove side navbar
 let removeSideNavbar = (element, target, className) => {
   element.addEventListener("click", () => {
     target.classList.remove(className);
+    root.parentElement.classList.remove('overflow-hidden')
   });
 };
 // darkmode handler 
@@ -96,7 +98,7 @@ let header = () => {
   logoImg.src = "./assets/logo/logo.png";
   logoImg.alt = "CENFLIX";
   // nav area
-  nav.classList.add("navbar-wrapper");
+  nav.classList.add("nav-wrapper");
   // darkmode area
   darkModeWrapper.classList.add("darkmode-wrapper");
   // moon
