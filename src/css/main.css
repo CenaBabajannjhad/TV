@@ -6,6 +6,7 @@
   --gray-side-navbar: #0e0e0ed0;
   --main-red: #e50914;
   --sec-red: #b00710;
+  --gray-bg : #b2b2b2;
   --border-radius-value: 30px;
   --sidenavbar-input-width: 80%;
 }
@@ -26,7 +27,6 @@ button:hover {
 }
 body {
   background-color: var(--white);
-  height: 200vh;
   overflow-x: hidden;
 }
 .body-darkmode {
@@ -52,8 +52,6 @@ body {
 /***** header area ******/
 /* ******************* */
 header {
-  position: sticky;
-  top: 0;
   padding-top: 20px;
   padding-bottom: 20px;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
@@ -82,10 +80,10 @@ header {
 }
 /* navbar */
 .Navbar-wrapper {
-  transition: all 0.4s ease-in-out;
+  transition: transform 0.4s ease-in-out;
   transform: translateX(100%);
   position: fixed;
-  inset: 0;
+  inset: 0 !important;
   background: var(--gray-side-navbar);
   backdrop-filter: blur(6px);
 
@@ -152,6 +150,101 @@ header {
   outline: none;
 }
 /* ********************* */
+/***** main area ******/
+/* ******************* */
+.genre-movie{
+  padding: 15px 5px 10px 5px;
+  display: none !important;
+}
+.genre-movie-btns{
+  background: var(--gray-bg);
+  padding: 5px 30px 5px 5px;
+  text-align: left;
+  text-transform: capitalize;
+  font-size: .8rem;
+  margin-bottom: 5px;
+}
+/* movie-boxes */
+.movie-boxes-section{
+  padding-top: 30px;
+}
+.movie-boxes{
+  display: flex;
+  align-items: center;
+  gap: 0px 10px;
+  overflow-x: scroll;
+  margin-bottom: 40px;
+}
+.movie-boxes::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.movie-boxes::-webkit-scrollbar-track {
+  background: none;
+}
+.movie-boxes::-webkit-scrollbar-thumb {
+  background: none;
+  border-radius: 0;
+}
+.box{
+  background-color: var(--gray-bg);
+  border-radius: 5px;
+}
+.boxes-title-container{
+  padding-bottom: 5px;
+  padding-left: 5px;
+  font-size: .8rem;
+}
+.boxes-img-container > img{
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+/* movies-information-section */
+.movies-information-section{
+  padding-top: 20px;
+}
+.movies-information{
+  text-align: center;
+}
+.movie-information-image-container{
+  margin-bottom: 10px;
+}
+.movies-information-description{
+  margin-bottom: 20px;
+}
+.movies-information-description > p{
+  text-align: justify;
+  line-height: 22px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+.movies-information-scenes-img{
+  margin-bottom: 20px;
+  border-radius: 5px;
+  width: 300px !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ********************* */
 /*** responsive queries */
 /* ******************* */
 /* xs */
@@ -165,6 +258,7 @@ header {
   .container {
     max-width: 640px;
   }
+
 }
 /* md */
 @media screen and (min-width: 768px) {
@@ -243,6 +337,9 @@ header {
     border: none;
     background: #b2b2b2;
   }
+  .genre-movie{
+    display: block !important;
+  }
 }
 /* xl */
 @media screen and (min-width: 1280px) {
@@ -250,6 +347,78 @@ header {
     max-width: 1280px;
     padding-right: 50px;
     padding-left: 50px;
+  }
+  :root {
+    --sidenavbar-input-width: 200px;
+    --border-radius-value: 5px;
+  }
+  .container {
+    max-width: 1024px;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+  .navbar-close-btn-img {
+    display: none;
+  }
+  .hamburger {
+    display: none;
+  }
+  .darkmode-wrapper {
+    order: 1;
+    margin-left: 20px;
+  }
+  .Navbar-wrapper {
+    display: flex;
+    align-items: center;
+    position: static;
+    transform: translate(0);
+    background: none;
+    backdrop-filter: none;
+    padding-top: 0;
+  }
+  .Navbar-wrapper > li {
+    margin-left: 20px;
+  }
+  .nav-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .home-link {
+    font-size: 1rem !important;
+  }
+  .home-li {
+    margin-bottom: 0px;
+  }
+  .input-li {
+    margin-bottom: 0px;
+  }
+  .movies-option-li {
+    margin-bottom: 0px;
+  }
+  .search-input {
+    width: var(--sidenavbar-input-width);
+    padding: 8px 8px 8px 10px;
+    border-radius: var(--border-radius-value);
+    border: none;
+    text-transform: capitalize;
+    background: #b2b2b2;
+  }
+  .movies-option {
+    width: var(--sidenavbar-input-width);
+    padding: 8px 8px 8px 10px;
+    border-radius: var(--border-radius-value);
+    border: none;
+    background: #b2b2b2;
+  }
+  .episode-option {
+    width: var(--sidenavbar-input-width);
+    padding: 8px 8px 8px 10px;
+    border-radius: var(--border-radius-value);
+    border: none;
+    background: #b2b2b2;
+  }
+  .genre-movie{
+    display: block !important;
   }
 }
 
@@ -259,5 +428,78 @@ header {
     max-width: 1536px;
     padding-right: 100px;
     padding-left: 100px;
+  }
+
+  :root {
+    --sidenavbar-input-width: 200px;
+    --border-radius-value: 5px;
+  }
+  .container {
+    max-width: 1024px;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+  .navbar-close-btn-img {
+    display: none;
+  }
+  .hamburger {
+    display: none;
+  }
+  .darkmode-wrapper {
+    order: 1;
+    margin-left: 20px;
+  }
+  .Navbar-wrapper {
+    display: flex;
+    align-items: center;
+    position: static;
+    transform: translate(0);
+    background: none;
+    backdrop-filter: none;
+    padding-top: 0;
+  }
+  .Navbar-wrapper > li {
+    margin-left: 20px;
+  }
+  .nav-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .home-link {
+    font-size: 1rem !important;
+  }
+  .home-li {
+    margin-bottom: 0px;
+  }
+  .input-li {
+    margin-bottom: 0px;
+  }
+  .movies-option-li {
+    margin-bottom: 0px;
+  }
+  .search-input {
+    width: var(--sidenavbar-input-width);
+    padding: 8px 8px 8px 10px;
+    border-radius: var(--border-radius-value);
+    border: none;
+    text-transform: capitalize;
+    background: #b2b2b2;
+  }
+  .movies-option {
+    width: var(--sidenavbar-input-width);
+    padding: 8px 8px 8px 10px;
+    border-radius: var(--border-radius-value);
+    border: none;
+    background: #b2b2b2;
+  }
+  .episode-option {
+    width: var(--sidenavbar-input-width);
+    padding: 8px 8px 8px 10px;
+    border-radius: var(--border-radius-value);
+    border: none;
+    background: #b2b2b2;
+  }
+  .genre-movie{
+    display: block !important;
   }
 }

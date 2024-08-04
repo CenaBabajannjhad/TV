@@ -1,9 +1,13 @@
+window.addEventListener("DOMContentLoaded", App);
 const root = document.getElementById("root");
 let isDarkMode = false;
 
-window.addEventListener("DOMContentLoaded", App);
 function App() {
-  Mount(header());
+  Mount(Header());
+  Mount(Main());
+  Mount(MainGenres(), document.getElementById("main-container"));
+  Mount(MoviesBoxes(), document.getElementById("main-container"));
+  Mount(MoviesInformation() , document.getElementById("main-container"))
 }
 // components
 // mount component
@@ -18,38 +22,50 @@ let unMount = (element) => {
 let showSideNavbar = (element, target, className) => {
   element.addEventListener("click", () => {
     target.classList.add(className);
-    root.parentElement.classList.add('overflow-hidden')
+    root.parentElement.classList.add("overflow-hidden");
   });
 };
 // remove side navbar
 let removeSideNavbar = (element, target, className) => {
   element.addEventListener("click", () => {
     target.classList.remove(className);
-    root.parentElement.classList.remove('overflow-hidden')
+    root.parentElement.classList.remove("overflow-hidden");
   });
 };
-// darkmode handler 
-let activeDarkmode = (element , className , btnTwo , hamburgerElement, target = root.parentElement ) => {
-    element.addEventListener('click' , () => {
-        isDarkMode = true;
-        target.classList.add(className);
-        element.classList.add("none");
-        btnTwo.classList.remove("none");
-        hamburgerElement.src = "./assets/icons/menu/menu-white/menu.svg";
-    })
-}
+// darkmode handler
+let activeDarkmode = (
+  element,
+  className,
+  btnTwo,
+  hamburgerElement,
+  target = root.parentElement
+) => {
+  element.addEventListener("click", () => {
+    isDarkMode = true;
+    target.classList.add(className);
+    element.classList.add("none");
+    btnTwo.classList.remove("none");
+    hamburgerElement.src = "./assets/icons/menu/menu-white/menu.svg";
+  });
+};
 //darkmode remover
-let inActiveDarkmode = (element , className , btnTwo , hamburgerElement, target = root.parentElement ) => {
-    element.addEventListener('click' , () => {
-        isDarkMode = false;
-        target.classList.remove(className);
-        element.classList.add("none");
-        btnTwo.classList.remove("none");
-        hamburgerElement.src = "./assets/icons/menu/menu-black/menu.svg";
-    })
-}
-// header
-let header = () => {
+let inActiveDarkmode = (
+  element,
+  className,
+  btnTwo,
+  hamburgerElement,
+  target = root.parentElement
+) => {
+  element.addEventListener("click", () => {
+    isDarkMode = false;
+    target.classList.remove(className);
+    element.classList.add("none");
+    btnTwo.classList.remove("none");
+    hamburgerElement.src = "./assets/icons/menu/menu-black/menu.svg";
+  });
+};
+// ###-header-###
+let Header = () => {
   //create header elements
   let header = document.createElement("header");
   // header container
@@ -193,10 +209,126 @@ let header = () => {
   showSideNavbar(hamburgerButton, navbarUl, "show-sideNavbar");
   removeSideNavbar(navbarCloseBtn, navbarUl, "show-sideNavbar");
   // **darkmode event**
-  // darkmode active 
-  activeDarkmode(darkModeBtnMoon , 'body-darkmode' , darkmodeBtnSun , hamburgerImageBtn)  
-  inActiveDarkmode(darkmodeBtnSun , 'body-darkmode' ,darkModeBtnMoon ,  hamburgerImageBtn)
+  // darkmode active
+  activeDarkmode(
+    darkModeBtnMoon,
+    "body-darkmode",
+    darkmodeBtnSun,
+    hamburgerImageBtn
+  );
+  inActiveDarkmode(
+    darkmodeBtnSun,
+    "body-darkmode",
+    darkModeBtnMoon,
+    hamburgerImageBtn
+  );
   // return header elemenet for mounting
   return header;
 };
+// ###-main-###
+let Main = () => {
+  //create main elements
+  let main = document.createElement("main");
+  let mainContainer = document.createElement("div");
 
+  // classlist , src , type ...
+  mainContainer.classList.add("container");
+  mainContainer.id = "main-container";
+
+  // append
+  main.appendChild(mainContainer);
+
+  // return
+  return main;
+};
+// ###-main-genre-###
+let MainGenres = () => {
+  //create mainGenre elements
+  let mainGenresSection = document.createElement("section");
+  let mainGenresSectionBtns = document.createElement("button");
+
+  // classlist , src , type ...
+  mainGenresSection.classList.add("genre-movie");
+  mainGenresSectionBtns.classList.add("genre-movie-btns");
+  mainGenresSectionBtns.textContent = "hell boy";
+
+  // append
+  mainGenresSection.appendChild(mainGenresSectionBtns);
+
+  // return
+  return mainGenresSection;
+};
+// ###-MoviesBoxes-###
+let MoviesBoxes = () => {
+  //create moviesBoxes elements
+  let moviesBoxSection = document.createElement('section');
+  let moviesBoxesContainer = document.createElement('div');
+  let moviesBox = document.createElement('div');
+  // img box
+  let moviesBoxImgContainer = document.createElement('div');
+  let moviesBoxImg = document.createElement('img')
+  // img title
+  let moviesBoxTitleContainer = document.createElement('div');
+  let moviesBoxTitleH3 = document.createElement('h3');
+
+  // classlist , src , type ...
+  moviesBoxSection.classList.add("movie-boxes-section");
+  moviesBoxesContainer.classList.add("movie-boxes");
+  moviesBox.classList.add("box");
+  moviesBoxImgContainer.classList.add("boxes-img-container");
+  moviesBoxImg.src = "./assets/img/1.jpg";
+  moviesBoxImg.alt = "movie-img;";
+  moviesBoxTitleContainer.classList.add("boxes-title-container");
+  moviesBoxTitleH3.textContent = 'movies name';
+
+  // append
+  moviesBoxSection.appendChild(moviesBoxesContainer);
+  moviesBoxesContainer.appendChild(moviesBox);
+  moviesBox.appendChild(moviesBoxImgContainer);
+  moviesBoxImgContainer.appendChild(moviesBoxImg);
+  moviesBox.appendChild(moviesBoxTitleContainer);
+  moviesBoxTitleContainer.appendChild(moviesBoxTitleH3);
+
+  // return
+  return moviesBoxSection
+}
+// ###-MovieInformations-###
+let MoviesInformation = () => {
+  // creating moviesinformation elements
+  let moviesInformationSection = document.createElement('section');
+  let moviesInformationContainer = document.createElement('div');
+  // movies poster
+  let moviesInformationImgContainer = document.createElement('div');
+  let moviesInformationImg = document.createElement('img');
+  // description
+  let moviesInformationDescriptionContainer = document.createElement('div');
+  let moviesInformationP = document.createElement('p');
+  // Scenes
+  let moviesInformationScenesContainer = document.createElement('div');
+  let moviesInformationScenesImg = document.createElement('img');
+
+  // classlist , src , type ...
+  moviesInformationSection.classList.add("movies-information-section");
+  moviesInformationContainer.classList.add("container" , "movies-information");
+  moviesInformationImgContainer.classList.add("movie-information-image-container");
+  moviesInformationImg.src = "./assets/img/1.jpg";
+  moviesInformationImg.alt = 'movies-poster';
+  moviesInformationDescriptionContainer.classList.add("movies-information-description");
+  moviesInformationP.textContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae dicta, esse quaerat maxime veritatis perspiciatis optio accusantium incidunt suscipit soluta consectetur accusamus quo ullam! Voluptatibus accusantium voluptatum voluptate id laboriosam unde, explicabo corporis quae ratione quam itaque, ipsum praesentium recusandae dolores in autem nesciunt? Eligendi doloremque sit maiores cupiditate!";
+  moviesInformationScenesContainer.classList.add("movies-information-scenes");
+  moviesInformationScenesImg.classList.add("movies-information-scenes-img");
+  moviesInformationScenesImg.src = "./assets/img/3.jpg";
+  moviesInformationScenesImg.alt = 'movies-scenes'
+
+  // append
+  moviesInformationSection.appendChild(moviesInformationContainer);
+  moviesInformationContainer.appendChild(moviesInformationImgContainer);
+  moviesInformationImgContainer.appendChild(moviesInformationImg);
+  moviesInformationContainer.appendChild(moviesInformationDescriptionContainer);
+  moviesInformationDescriptionContainer.appendChild(moviesInformationP);
+  moviesInformationContainer.appendChild(moviesInformationScenesContainer);
+  moviesInformationScenesContainer.appendChild(moviesInformationScenesImg);
+
+  // return
+  return moviesInformationSection
+}
