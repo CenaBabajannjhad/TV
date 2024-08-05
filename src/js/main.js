@@ -5,27 +5,32 @@ window.addEventListener("DOMContentLoaded", App);
 function App() {
   Mount(Header());
   Mount(Main());
-  Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
+  Mount(MoviesBoxesSlider(0 , 20), document.getElementById("main-container"));
+  Mount(MoviesBoxesSlider(21, 40), document.getElementById("main-container"));
+  Mount(MoviesBoxesSlider(41, 60), document.getElementById("main-container"));
 }
 
-// mount component
+// mount 
 let Mount = (element, place = root) => {
   place.appendChild(element);
 };
-// unMount component
-let unMount = (element) => {
+// unMount 
+let UnMount = (element) => {
   element.remove();
 };
+// listUnMount 
+let listUnMount = (element) => {
+  element.forEach(item => item.remove())
+}
 // ##get all movies##
 let GetAllMovies = async () => {
   let movies;
-  let URL = "https://api.tvmaze.com/schedule/full";
+  let URL = "https://api.tvmaze.com/shows";
 
   try {
     let response = await fetch(URL);
     let json = await response.json();
-    movies = json.filter((item, index) => index < 200);
-    
+    movies = json.filter((item, index) => index < 201);
   } catch (err) {
     console.err(err);
   }
@@ -126,9 +131,9 @@ let Header = () => {
     movieData.forEach((item) => {
       let navbarMoviesOption = document.createElement("option");
       navbarMoviesOption.id = item.id;
-      navbarMoviesOption.textContent = item._embedded.show.name;
+      navbarMoviesOption.textContent = item.name;
       navbarMoviesSelect.appendChild(navbarMoviesOption);
-    });  
+    });
   };
   moviesOptionValue();
   // ####################################################
@@ -285,84 +290,102 @@ let Main = () => {
   // return
   return main;
 };
-// ###-Box-###
-// let Box = () => {
-// };
 // ###-MoviesBoxesSlider-###
-let MoviesBoxesSlider = () => {
-  //create moviesBoxes elements
+let MoviesBoxesSlider = (step, count) => {
   let moviesBoxSection = document.createElement("section");
-  let moviesBoxesContainer = document.createElement("div");
-  let moviesBox = document.createElement("div");
-  // img box
-  let moviesBoxImgContainer = document.createElement("div");
-  let moviesBoxImg = document.createElement("img");
-  // img title
-  let moviesBoxTitleContainer = document.createElement("div");
-  let moviesBoxTitleH3 = document.createElement("h3");
+  // get data from API
+  let setImgAndTitleMoviesSlider = async () => {
+    let movieData = await GetAllMovies();
+    
+    for (let i = step; i <= count; i++) {
+      // img box
+      let moviesBox = document.createElement("div");
+      let moviesBoxImgContainer = document.createElement("div");
+      let moviesBoxImg = document.createElement("img");
+      // img title
+      let moviesBoxTitleContainer = document.createElement("div");
+      let moviesBoxTitleH3 = document.createElement("h3");
+      // attributes
+      moviesBoxSection.classList.add("movie-boxes-section", "movie-boxes");
+      // moviesBoxesContainer.classList.add("box");
+      moviesBox.classList.add("box");
+      moviesBoxImgContainer.classList.add("boxes-img-container");
+      moviesBoxImg.src = movieData[i].image.medium;
+      moviesBoxImg.alt = movieData[i].name;
+      moviesBoxImg.id = movieData[i].id;
+      moviesBoxTitleContainer.classList.add("boxes-title-container");
+      moviesBoxTitleH3.textContent = movieData[i].name;
+      // append
+      moviesBoxSection.appendChild(moviesBox);
+      moviesBox.appendChild(moviesBoxImgContainer);
+      moviesBoxImgContainer.appendChild(moviesBoxImg);
+      moviesBox.appendChild(moviesBoxTitleContainer);
+      moviesBoxTitleContainer.appendChild(moviesBoxTitleH3);
 
-  // classlist , src , type ...
-  moviesBoxSection.classList.add("movie-boxes-section");
-  moviesBoxesContainer.classList.add("movie-boxes");
-  moviesBox.classList.add("box");
-  moviesBoxImgContainer.classList.add("boxes-img-container");
-  moviesBoxImg.src = "./assets/img/1.jpg";
-  moviesBoxImg.alt = "movie-img;";
-  moviesBoxTitleContainer.classList.add("boxes-title-container");
-  moviesBoxTitleH3.textContent = "movies name";
-
-  // append
-  moviesBoxSection.appendChild(moviesBoxesContainer);
-  moviesBoxesContainer.appendChild(moviesBox);
-  moviesBox.appendChild(moviesBoxImgContainer);
-  moviesBoxImgContainer.appendChild(moviesBoxImg);
-  moviesBox.appendChild(moviesBoxTitleContainer);
-  moviesBoxTitleContainer.appendChild(moviesBoxTitleH3);
-
+      moviesBox.addEventListener("click", (Event) => {
+        console.log('id box clicked : ' , Event.target.id)
+        Mount(MoviesInformation(Event.target.id) , document.getElementById("main-container"));
+      });
+    }
+    
+  };
+  setImgAndTitleMoviesSlider(step, count);
   // return
   return moviesBoxSection;
 };
 // ###-MovieInformations-###
-let MoviesInformation = () => {
-  // creating moviesinformation elements
+let MoviesInformation = (movieId) => {
+  // unmount all sliders
+  listUnMount(document.querySelectorAll(".movie-boxes"));
+  // get movieData 
   let moviesInformationSection = document.createElement("section");
-  let moviesInformationContainer = document.createElement("div");
-  // movies poster
-  let moviesInformationImgContainer = document.createElement("div");
-  let moviesInformationImg = document.createElement("img");
-  // description
-  let moviesInformationDescriptionContainer = document.createElement("div");
-  let moviesInformationP = document.createElement("p");
-  // Scenes
-  let moviesInformationScenesContainer = document.createElement("div");
-  let moviesInformationScenesImg = document.createElement("img");
+  let configMoviesInformationPage = async () => {
+    let movieData = await GetAllMovies();
+    let movieTarget = movieId;
+    console.log(movieData[movieTarget]);
 
-  // classlist , src , type ...
-  moviesInformationSection.classList.add("movies-information-section");
-  moviesInformationContainer.classList.add("container", "movies-information");
-  moviesInformationImgContainer.classList.add(
-    "movie-information-image-container"
-  );
-  moviesInformationImg.src = "./assets/img/1.jpg";
-  moviesInformationImg.alt = "movies-poster";
-  moviesInformationDescriptionContainer.classList.add(
-    "movies-information-description"
-  );
-  moviesInformationP.textContent =
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae dicta, esse quaerat maxime veritatis perspiciatis optio accusantium incidunt suscipit soluta consectetur accusamus quo ullam! Voluptatibus accusantium voluptatum voluptate id laboriosam unde, explicabo corporis quae ratione quam itaque, ipsum praesentium recusandae dolores in autem nesciunt? Eligendi doloremque sit maiores cupiditate!";
-  moviesInformationScenesContainer.classList.add("movies-information-scenes");
-  moviesInformationScenesImg.classList.add("movies-information-scenes-img");
-  moviesInformationScenesImg.src = "./assets/img/3.jpg";
-  moviesInformationScenesImg.alt = "movies-scenes";
 
-  // append
-  moviesInformationSection.appendChild(moviesInformationContainer);
-  moviesInformationContainer.appendChild(moviesInformationImgContainer);
-  moviesInformationImgContainer.appendChild(moviesInformationImg);
-  moviesInformationContainer.appendChild(moviesInformationDescriptionContainer);
-  moviesInformationDescriptionContainer.appendChild(moviesInformationP);
-  moviesInformationContainer.appendChild(moviesInformationScenesContainer);
-  moviesInformationScenesContainer.appendChild(moviesInformationScenesImg);
+    // creating moviesinformation elements
+    let moviesInformationContainer = document.createElement("div");
+    // movies poster
+    let moviesInformationImgContainer = document.createElement("div");
+    let moviesInformationImg = document.createElement("img");
+    // description
+    let moviesInformationDescriptionContainer = document.createElement("div");
+    let moviesInformationP = document.createElement("p");
+    // Scenes
+    let moviesInformationScenesContainer = document.createElement("div");
+    let moviesInformationScenesImg = document.createElement("img");
+  
+    // classlist , src , type ...
+    moviesInformationSection.classList.add("movies-information-section");
+    moviesInformationContainer.classList.add("container", "movies-information");
+    moviesInformationImgContainer.classList.add(
+      "movie-information-image-container"
+    );
+    moviesInformationImg.src = movieData[movieTarget].image.medium;
+    moviesInformationImg.alt = "movies-poster";
+    moviesInformationDescriptionContainer.classList.add(
+      "movies-information-description"
+    );
+    moviesInformationP.textContent =
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae dicta, esse quaerat maxime veritatis perspiciatis optio accusantium incidunt suscipit soluta consectetur accusamus quo ullam! Voluptatibus accusantium voluptatum voluptate id laboriosam unde, explicabo corporis quae ratione quam itaque, ipsum praesentium recusandae dolores in autem nesciunt? Eligendi doloremque sit maiores cupiditate!";
+    moviesInformationScenesContainer.classList.add("movies-information-scenes");
+    moviesInformationScenesImg.classList.add("movies-information-scenes-img");
+    moviesInformationScenesImg.src = "./assets/img/3.jpg";
+    moviesInformationScenesImg.alt = "movies-scenes";
+  
+    // append
+    moviesInformationSection.appendChild(moviesInformationContainer);
+    moviesInformationContainer.appendChild(moviesInformationImgContainer);
+    moviesInformationImgContainer.appendChild(moviesInformationImg);
+    moviesInformationContainer.appendChild(moviesInformationDescriptionContainer);
+    moviesInformationDescriptionContainer.appendChild(moviesInformationP);
+    moviesInformationContainer.appendChild(moviesInformationScenesContainer);
+    moviesInformationScenesContainer.appendChild(moviesInformationScenesImg);
+  }
+
+  configMoviesInformationPage()
 
   // return
   return moviesInformationSection;
