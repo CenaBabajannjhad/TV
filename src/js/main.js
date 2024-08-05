@@ -1,15 +1,13 @@
-window.addEventListener("DOMContentLoaded", App);
 const root = document.getElementById("root");
 let isDarkMode = false;
+window.addEventListener("DOMContentLoaded", App);
 
 function App() {
   Mount(Header());
   Mount(Main());
-  Mount(MainGenres(), document.getElementById("main-container"));
-  Mount(MoviesBoxes(), document.getElementById("main-container"));
-  Mount(MoviesInformation() , document.getElementById("main-container"))
+  Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
 }
-// components
+
 // mount component
 let Mount = (element, place = root) => {
   place.appendChild(element);
@@ -17,6 +15,22 @@ let Mount = (element, place = root) => {
 // unMount component
 let unMount = (element) => {
   element.remove();
+};
+// ##get all movies##
+let GetAllMovies = async () => {
+  let movies;
+  let URL = "https://api.tvmaze.com/schedule/full";
+
+  try {
+    let response = await fetch(URL);
+    let json = await response.json();
+    movies = json.filter((item, index) => index < 200);
+    
+  } catch (err) {
+    console.err(err);
+  }
+
+  return movies;
 };
 // side navbar Event
 let showSideNavbar = (element, target, className) => {
@@ -64,6 +78,7 @@ let inActiveDarkmode = (
     hamburgerElement.src = "./assets/icons/menu/menu-black/menu.svg";
   });
 };
+// components
 // ###-header-###
 let Header = () => {
   //create header elements
@@ -97,15 +112,35 @@ let Header = () => {
   // navbar input
   let navbarInputLi = document.createElement("li");
   let navbarInput = document.createElement("input");
+  let searchLiveBoxContainer = document.createElement("div");
+  let searchLiveBoxResult = document.createElement("div");
+  let searchResultA = document.createElement("a");
   // navabr movies option
   let navbarMoviesLi = document.createElement("li");
   let navbarMoviesSelect = document.createElement("select");
-  let navbarMoviesOption = document.createElement("option");
+  // let navbarMoviesOption = document.createElement("option");
+  // ####################################################
+  // **movies options value from API**
+  let moviesOptionValue = async () => {
+    let movieData = await GetAllMovies();
+    movieData.forEach((item) => {
+      let navbarMoviesOption = document.createElement("option");
+      navbarMoviesOption.id = item.id;
+      navbarMoviesOption.textContent = item._embedded.show.name;
+      navbarMoviesSelect.appendChild(navbarMoviesOption);
+    });  
+  };
+  moviesOptionValue();
+  // ####################################################
   // navbar episode option
   let navbarEpisodeLi = document.createElement("li");
   let navbarEpisodeSelect = document.createElement("select");
   let navbarEpisodeOptions = document.createElement("option");
-
+  // ####################################################
+  let episodeOptionValue = async () => {
+    alert("hi");
+  };
+  // ####################################################
   // **add class , id , src...**
   headerContainer.classList.add("container", "header-container");
   // logo area
@@ -155,15 +190,21 @@ let Header = () => {
   navbarInput.id = "search";
   navbarInput.type = "text";
   navbarInput.placeholder = "enter movie name...";
+  searchLiveBoxContainer.classList.add(
+    "input-live-search-box-container",
+    "none"
+  );
+  searchLiveBoxResult.classList.add("result");
+  searchResultA.textContent = "result";
   // navbar movies option area
   navbarMoviesLi.classList.add("movies-option-li");
   navbarMoviesSelect.classList.add("movies-option");
   navbarMoviesSelect.id = "movies-option";
-  navbarMoviesOption.textContent = "example";
+  // navbarMoviesOption.textContent = "movies";
   // navbar episode option area
   navbarEpisodeSelect.classList.add("episode-option");
   navbarEpisodeSelect.id = "episode-option";
-  navbarEpisodeOptions.textContent = "example";
+  navbarEpisodeOptions.textContent = "episode";
 
   // ** append **
   header.appendChild(headerContainer);
@@ -196,10 +237,13 @@ let Header = () => {
   // navbar input
   navbarUl.appendChild(navbarInputLi);
   navbarInputLi.appendChild(navbarInput);
+  navbarInputLi.appendChild(searchLiveBoxContainer);
+  searchLiveBoxContainer.appendChild(searchLiveBoxResult);
+  searchLiveBoxResult.appendChild(searchResultA);
   // navbar movies option
   navbarUl.appendChild(navbarMoviesLi);
   navbarMoviesLi.appendChild(navbarMoviesSelect);
-  navbarMoviesSelect.appendChild(navbarMoviesOption);
+  // navbarMoviesSelect.appendChild(navbarMoviesOption);
   // navbar episode option
   navbarUl.appendChild(navbarEpisodeLi);
   navbarEpisodeLi.appendChild(navbarEpisodeSelect);
@@ -241,35 +285,21 @@ let Main = () => {
   // return
   return main;
 };
-// ###-main-genre-###
-let MainGenres = () => {
-  //create mainGenre elements
-  let mainGenresSection = document.createElement("section");
-  let mainGenresSectionBtns = document.createElement("button");
-
-  // classlist , src , type ...
-  mainGenresSection.classList.add("genre-movie");
-  mainGenresSectionBtns.classList.add("genre-movie-btns");
-  mainGenresSectionBtns.textContent = "hell boy";
-
-  // append
-  mainGenresSection.appendChild(mainGenresSectionBtns);
-
-  // return
-  return mainGenresSection;
-};
-// ###-MoviesBoxes-###
-let MoviesBoxes = () => {
+// ###-Box-###
+// let Box = () => {
+// };
+// ###-MoviesBoxesSlider-###
+let MoviesBoxesSlider = () => {
   //create moviesBoxes elements
-  let moviesBoxSection = document.createElement('section');
-  let moviesBoxesContainer = document.createElement('div');
-  let moviesBox = document.createElement('div');
+  let moviesBoxSection = document.createElement("section");
+  let moviesBoxesContainer = document.createElement("div");
+  let moviesBox = document.createElement("div");
   // img box
-  let moviesBoxImgContainer = document.createElement('div');
-  let moviesBoxImg = document.createElement('img')
+  let moviesBoxImgContainer = document.createElement("div");
+  let moviesBoxImg = document.createElement("img");
   // img title
-  let moviesBoxTitleContainer = document.createElement('div');
-  let moviesBoxTitleH3 = document.createElement('h3');
+  let moviesBoxTitleContainer = document.createElement("div");
+  let moviesBoxTitleH3 = document.createElement("h3");
 
   // classlist , src , type ...
   moviesBoxSection.classList.add("movie-boxes-section");
@@ -279,7 +309,7 @@ let MoviesBoxes = () => {
   moviesBoxImg.src = "./assets/img/1.jpg";
   moviesBoxImg.alt = "movie-img;";
   moviesBoxTitleContainer.classList.add("boxes-title-container");
-  moviesBoxTitleH3.textContent = 'movies name';
+  moviesBoxTitleH3.textContent = "movies name";
 
   // append
   moviesBoxSection.appendChild(moviesBoxesContainer);
@@ -290,35 +320,40 @@ let MoviesBoxes = () => {
   moviesBoxTitleContainer.appendChild(moviesBoxTitleH3);
 
   // return
-  return moviesBoxSection
-}
+  return moviesBoxSection;
+};
 // ###-MovieInformations-###
 let MoviesInformation = () => {
   // creating moviesinformation elements
-  let moviesInformationSection = document.createElement('section');
-  let moviesInformationContainer = document.createElement('div');
+  let moviesInformationSection = document.createElement("section");
+  let moviesInformationContainer = document.createElement("div");
   // movies poster
-  let moviesInformationImgContainer = document.createElement('div');
-  let moviesInformationImg = document.createElement('img');
+  let moviesInformationImgContainer = document.createElement("div");
+  let moviesInformationImg = document.createElement("img");
   // description
-  let moviesInformationDescriptionContainer = document.createElement('div');
-  let moviesInformationP = document.createElement('p');
+  let moviesInformationDescriptionContainer = document.createElement("div");
+  let moviesInformationP = document.createElement("p");
   // Scenes
-  let moviesInformationScenesContainer = document.createElement('div');
-  let moviesInformationScenesImg = document.createElement('img');
+  let moviesInformationScenesContainer = document.createElement("div");
+  let moviesInformationScenesImg = document.createElement("img");
 
   // classlist , src , type ...
   moviesInformationSection.classList.add("movies-information-section");
-  moviesInformationContainer.classList.add("container" , "movies-information");
-  moviesInformationImgContainer.classList.add("movie-information-image-container");
+  moviesInformationContainer.classList.add("container", "movies-information");
+  moviesInformationImgContainer.classList.add(
+    "movie-information-image-container"
+  );
   moviesInformationImg.src = "./assets/img/1.jpg";
-  moviesInformationImg.alt = 'movies-poster';
-  moviesInformationDescriptionContainer.classList.add("movies-information-description");
-  moviesInformationP.textContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae dicta, esse quaerat maxime veritatis perspiciatis optio accusantium incidunt suscipit soluta consectetur accusamus quo ullam! Voluptatibus accusantium voluptatum voluptate id laboriosam unde, explicabo corporis quae ratione quam itaque, ipsum praesentium recusandae dolores in autem nesciunt? Eligendi doloremque sit maiores cupiditate!";
+  moviesInformationImg.alt = "movies-poster";
+  moviesInformationDescriptionContainer.classList.add(
+    "movies-information-description"
+  );
+  moviesInformationP.textContent =
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae dicta, esse quaerat maxime veritatis perspiciatis optio accusantium incidunt suscipit soluta consectetur accusamus quo ullam! Voluptatibus accusantium voluptatum voluptate id laboriosam unde, explicabo corporis quae ratione quam itaque, ipsum praesentium recusandae dolores in autem nesciunt? Eligendi doloremque sit maiores cupiditate!";
   moviesInformationScenesContainer.classList.add("movies-information-scenes");
   moviesInformationScenesImg.classList.add("movies-information-scenes-img");
   moviesInformationScenesImg.src = "./assets/img/3.jpg";
-  moviesInformationScenesImg.alt = 'movies-scenes'
+  moviesInformationScenesImg.alt = "movies-scenes";
 
   // append
   moviesInformationSection.appendChild(moviesInformationContainer);
@@ -330,5 +365,5 @@ let MoviesInformation = () => {
   moviesInformationScenesContainer.appendChild(moviesInformationScenesImg);
 
   // return
-  return moviesInformationSection
-}
+  return moviesInformationSection;
+};

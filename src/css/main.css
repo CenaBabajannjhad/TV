@@ -6,7 +6,7 @@
   --gray-side-navbar: #0e0e0ed0;
   --main-red: #e50914;
   --sec-red: #b00710;
-  --gray-bg : #b2b2b2;
+  --gray-bg: #b2b2b2;
   --border-radius-value: 30px;
   --sidenavbar-input-width: 80%;
 }
@@ -52,6 +52,8 @@ body {
 /***** header area ******/
 /* ******************* */
 header {
+  position: sticky;
+  top: 0;
   padding-top: 20px;
   padding-bottom: 20px;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
@@ -85,10 +87,49 @@ header {
   position: fixed;
   inset: 0 !important;
   background: var(--gray-side-navbar);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
 
   text-align: center;
   padding-top: 180px;
+}
+/* search live */
+
+.input-live-search-box-container {
+  text-align: left;
+  overflow-y: scroll;
+  position: absolute;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+  width: 80%;
+  left: 10%;
+  right: 10%;
+  margin-left: auto;
+  right: auto;
+  height: 150px;
+  background: var(--gray-bg);
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
+    rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
+}
+.result {
+  margin-bottom: 5px;
+  color: rgb(49, 49, 49);
+}
+.result > a {
+  color: rgb(0, 0, 0);
+  text-decoration: underline;
+  text-transform: capitalize;
+}
+.input-live-search-box-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.input-live-search-box-container::-webkit-scrollbar-track {
+  background: none;
+}
+.input-live-search-box-container::-webkit-scrollbar-thumb {
+  background: none;
+  border-radius: 0;
 }
 /* close navbar btn */
 .navbar-close {
@@ -152,23 +193,11 @@ header {
 /* ********************* */
 /***** main area ******/
 /* ******************* */
-.genre-movie{
-  padding: 15px 5px 10px 5px;
-  display: none !important;
-}
-.genre-movie-btns{
-  background: var(--gray-bg);
-  padding: 5px 30px 5px 5px;
-  text-align: left;
-  text-transform: capitalize;
-  font-size: .8rem;
-  margin-bottom: 5px;
-}
 /* movie-boxes */
-.movie-boxes-section{
-  padding-top: 30px;
+.movie-boxes-section {
+  padding-top: 15px;
 }
-.movie-boxes{
+.movie-boxes {
   display: flex;
   align-items: center;
   gap: 0px 10px;
@@ -186,63 +215,43 @@ header {
   background: none;
   border-radius: 0;
 }
-.box{
+.box {
   background-color: var(--gray-bg);
   border-radius: 5px;
 }
-.boxes-title-container{
+.boxes-title-container {
   padding-bottom: 5px;
   padding-left: 5px;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
-.boxes-img-container > img{
+.boxes-img-container > img {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
 /* movies-information-section */
-.movies-information-section{
+.movies-information-section {
   padding-top: 20px;
 }
-.movies-information{
+.movies-information {
   text-align: center;
 }
-.movie-information-image-container{
+.movie-information-image-container {
   margin-bottom: 10px;
 }
-.movies-information-description{
+.movies-information-description {
   margin-bottom: 20px;
 }
-.movies-information-description > p{
+.movies-information-description > p {
   text-align: justify;
   line-height: 22px;
   padding-right: 5px;
   padding-left: 5px;
 }
-.movies-information-scenes-img{
+.movies-information-scenes-img {
   margin-bottom: 20px;
   border-radius: 5px;
   width: 300px !important;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* ********************* */
 /*** responsive queries */
@@ -258,7 +267,6 @@ header {
   .container {
     max-width: 640px;
   }
-
 }
 /* md */
 @media screen and (min-width: 768px) {
@@ -337,8 +345,18 @@ header {
     border: none;
     background: #b2b2b2;
   }
-  .genre-movie{
-    display: block !important;
+  .input-live-search-box-container {
+    text-align: left;
+    overflow-y: scroll;
+    position: absolute;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    width: 40%;
+    height: 150px;
+    background: var(--gray-bg);
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
+      rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
   }
 }
 /* xl */
@@ -416,9 +434,6 @@ header {
     border-radius: var(--border-radius-value);
     border: none;
     background: #b2b2b2;
-  }
-  .genre-movie{
-    display: block !important;
   }
 }
 
@@ -498,8 +513,5 @@ header {
     border-radius: var(--border-radius-value);
     border: none;
     background: #b2b2b2;
-  }
-  .genre-movie{
-    display: block !important;
   }
 }
