@@ -72,7 +72,7 @@ const infiniteScroll = () => {
       setTimeout(() => {
         UnMount(document.querySelector(".loading-section"));
         Mount(
-          MoviesBoxesSlider(41, 60),
+          MoviesBoxesSlider(),
           document.getElementById("main-container")
         );
       }, 2000);
