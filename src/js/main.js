@@ -7,12 +7,10 @@ function App() {
   Mount(Main());
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
-  // Mount(MoviesBoxesSlider(41, 60), document.getElementById("main-container"));
 }
 
 // mount
 const Mount = (element, place = root) => {
-  console.log(element);
   place.appendChild(element);
 };
 // unMount
