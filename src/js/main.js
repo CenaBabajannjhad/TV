@@ -21,7 +21,7 @@ const UnMount = (element) => {
 const listUnMount = (element) => {
   element.forEach((item) => item.remove());
 };
-// ##get all movies , i get 321 becuse i get more then this number , chorm memory usage go to hight , like 1GB , and makes site slow##
+// ##get all movies , i get 321 becuse i get more then this number , chorm memory usage increased , increase 1GB , and makes site slow##
 const GetAllMovies = async () => {
   let movies;
   let URL = "https://api.tvmaze.com/shows";
