@@ -71,10 +71,7 @@ const infiniteScroll = () => {
       // remove loading from doc and mount new slider
       setTimeout(() => {
         UnMount(document.querySelector(".loading-section"));
-        Mount(
-          MoviesBoxesSlider(),
-          document.getElementById("main-container")
-        );
+        Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
       }, 2000);
     }
   }
@@ -110,6 +107,13 @@ const activeDarkmode = (
     btnTwo.classList.remove("none");
     hamburgerElement.src = "./assets/icons/menu/menu-white/menu.svg";
     header.classList.add("header-dark");
+    // movie information condition
+    if (document.querySelector(".movie-name")) {
+      document.querySelector(".movie-name").classList.add("darkmode-name");
+      document
+        .querySelector(".movies-information-description")
+        .classList.add("darkmode-desc");
+    }
     // --BUG-- when darkmode clicked loading loading.src must change , now it's dosen't change becuse loading dosen't mount in app and this return null
     // document.querySelector(".loading-el").src =
     //   "./assets/gif/loading/dark-loading.gif";
@@ -131,6 +135,12 @@ const inActiveDarkmode = (
     btnTwo.classList.remove("none");
     hamburgerElement.src = "./assets/icons/menu/menu-black/menu.svg";
     header.classList.remove("header-dark");
+    if (document.querySelector(".movie-name")) {
+      document.querySelector(".movie-name").classList.remove("darkmode-name");
+      document
+        .querySelector(".movies-information-description")
+        .classList.remove("darkmode-desc");
+    }
     // document.querySelector(".loading-el").src =
     //   "./assets/gif/loading/loading.gif";
   });
@@ -337,10 +347,6 @@ const Main = () => {
   // return
   return main;
 };
-// ##-Box-##
-// const Box = () => {
-
-// }
 // ###-MoviesBoxesSlider-###
 let step = 0;
 let count = 10;
@@ -402,9 +408,24 @@ const MoviesInformation = (movieName) => {
     // get movieData
     let movieData = await GetAllMovies();
     let targetMovie = await movieData.find((movie) => movie.name === movieName);
-    console.log(targetMovie);
     // creating moviesinformation elements
     let moviesInformationContainer = document.createElement("div");
+    let sectionTopContainer = document.createElement("div");
+    let sectionBttomContainer = document.createElement("div");
+    // back button
+    let backButtonContainer = document.createElement("div");
+    let backButtonElement = document.createElement("button");
+    // backbtn event
+    backButtonElement.addEventListener("click", () => {
+      UnMount(
+        moviesInformationSection,
+        document.getElementById("main-container")
+      );
+      step = 0;
+      count = 10;
+      Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
+      Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
+    });
     // movies poster
     let moviesInformationImgContainer = document.createElement("div");
     let moviesInformationImg = document.createElement("img");
@@ -420,10 +441,25 @@ const MoviesInformation = (movieName) => {
     moviesInformationImgContainer.classList.add(
       "movie-information-image-container"
     );
+    // back button
+    backButtonContainer.classList.add("backBtn-wrapper");
+    backButtonElement.classList.add("back-btn");
+    backButtonElement.textContent = "back";
     // movie name
-    moviesInformationContainer.classList.add('movie-name-contaner');
+    moviesInformationContainer.classList.add("movie-name-contaner");
     movieInformationsNameh2.textContent = targetMovie.name;
-    movieInformationsNameh2.classList.add('movie-name')
+    movieInformationsNameh2.classList.add("movie-name");
+    // movie genres
+    let movieGenresGenerator = (genres) => {
+      let movieGenresContainer = document.createElement("div");
+      movieGenresContainer.classList.add("movie-genres-container");
+      for (let i = 0; i < genres.length; i++) {
+        let genresItem = document.createElement("div");
+        genresItem.textContent = genres[i];
+        movieGenresContainer.appendChild(genresItem);
+      }
+      return movieGenresContainer;
+    };
     // movie img
     moviesInformationImg.src = targetMovie.image.medium;
     moviesInformationImg.alt = targetMovie.name;
@@ -432,19 +468,26 @@ const MoviesInformation = (movieName) => {
     );
     // movie description
     moviesInformationDescriptionContainer.innerHTML = targetMovie.summary;
-
+    sectionTopContainer.classList.add("sec-1");
+    sectionBttomContainer.classList.add("sec-2");
     // append
     moviesInformationSection.appendChild(moviesInformationContainer);
-    moviesInformationContainer.appendChild(moviesInformationImgContainer);
+    // back btn
+    moviesInformationContainer.appendChild(sectionTopContainer);
+    moviesInformationContainer.appendChild(sectionBttomContainer);
+    sectionTopContainer.appendChild(backButtonContainer);
+    backButtonContainer.appendChild(backButtonElement);
+    // img
+    sectionTopContainer.appendChild(moviesInformationImgContainer);
     moviesInformationImgContainer.appendChild(moviesInformationImg);
     // movie name
-    moviesInformationContainer.appendChild(movieInformationsNameContainer);
+    sectionBttomContainer.appendChild(movieInformationsNameContainer);
     movieInformationsNameContainer.appendChild(movieInformationsNameh2);
-    // descript
-    moviesInformationContainer.appendChild(
-      moviesInformationDescriptionContainer
-    );
+    // movie genres
+    sectionBttomContainer.appendChild(movieGenresGenerator(targetMovie.genres));
 
+    // descript
+    sectionBttomContainer.appendChild(moviesInformationDescriptionContainer);
   };
   configMoviesInformationPage();
 
