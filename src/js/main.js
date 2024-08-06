@@ -12,17 +12,18 @@ function App() {
 
 // mount
 const Mount = (element, place = root) => {
+  console.log(element);
   place.appendChild(element);
 };
 // unMount
 const UnMount = (element) => {
-  element.remove()
+  element.remove();
 };
 // listUnMount
 const listUnMount = (element) => {
   element.forEach((item) => item.remove());
 };
-// ##get all movies##
+// ##get all movies , i get 321 becuse i get more then this number , chorm memory usage go to hight , like 1GB , and makes site slow##
 const GetAllMovies = async () => {
   let movies;
   let URL = "https://api.tvmaze.com/shows";
@@ -40,16 +41,16 @@ const GetAllMovies = async () => {
 // loading component
 const loadingElement = () => {
   // createElement
-  let loadingSection = document.createElement('section');
-  let loadingSectionContainer = document.createElement('div');
-  let loading = document.createElement('img');
+  let loadingSection = document.createElement("section");
+  let loadingSectionContainer = document.createElement("div");
+  let loading = document.createElement("img");
 
   // attributes
-  loadingSection.classList.add('loading-section');
-  loadingSectionContainer.classList.add('loading-section-container');
-  loading.classList.add('loading-el')
-  loading.alt = 'loading gif';
-  loading.src = './assets/gif/loading/loading.gif';
+  loadingSection.classList.add("loading-section");
+  loadingSectionContainer.classList.add("loading-section-container");
+  loading.classList.add("loading-el");
+  loading.alt = "loading gif";
+  loading.src = "./assets/gif/loading/loading.gif";
 
   // appenchild
   loadingSection.appendChild(loadingSectionContainer);
@@ -57,30 +58,30 @@ const loadingElement = () => {
 
   // return
   return loadingSection;
-}
+};
 // infinite scroll event
 const infiniteScroll = () => {
-  window.addEventListener("scroll", () => {
-    let docHight = document.documentElement.scrollHeight;
-    let docTop = document.documentElement.scrollTop + 3;
-    let windowHeight = window.innerHeight;
+  let docHight = document.documentElement.scrollHeight;
+  let docTop = document.documentElement.scrollTop + 3;
+  let windowHeight = window.innerHeight;
 
-    if (windowHeight + docTop >= docHight) {
-      if(document.querySelector('.loading-section') === null){
-        // mount loading element in main
-        Mount(loadingElement() , document.getElementById("main-container"))
+  if (windowHeight + docTop >= docHight) {
+    if (document.querySelector(".loading-section") === null) {
+      // mount loading element in main
+      Mount(loadingElement(), document.getElementById("main-container"));
 
-        // remove loading from doc and mount new slider
-        setTimeout(() => {
-          UnMount(document.querySelector('.loading-section'));
-          Mount(MoviesBoxesSlider(41, 60), document.getElementById("main-container"));
-        }, 2000);
-      }
-
+      // remove loading from doc and mount new slider
+      setTimeout(() => {
+        UnMount(document.querySelector(".loading-section"));
+        Mount(
+          MoviesBoxesSlider(41, 60),
+          document.getElementById("main-container")
+        );
+      }, 2000);
     }
-  });
+  }
 };
-infiniteScroll();
+window.addEventListener("scroll", infiniteScroll);
 // side navbar Event
 const showSideNavbar = (element, target, className) => {
   element.addEventListener("click", () => {
@@ -112,7 +113,8 @@ const activeDarkmode = (
     hamburgerElement.src = "./assets/icons/menu/menu-white/menu.svg";
     header.classList.add("header-dark");
     // --BUG-- when darkmode clicked loading loading.src must change , now it's dosen't change becuse loading dosen't mount in app and this return null
-    document.querySelector('.loading-el').src = './assets/gif/loading/dark-loading.gif';
+    // document.querySelector(".loading-el").src =
+    //   "./assets/gif/loading/dark-loading.gif";
   });
 };
 //darkmode remover
@@ -131,7 +133,8 @@ const inActiveDarkmode = (
     btnTwo.classList.remove("none");
     hamburgerElement.src = "./assets/icons/menu/menu-black/menu.svg";
     header.classList.remove("header-dark");
-    document.querySelector('.loading-el').src = './assets/gif/loading/loading.gif';
+    // document.querySelector(".loading-el").src =
+    //   "./assets/gif/loading/loading.gif";
   });
 };
 // components
@@ -162,9 +165,6 @@ const Header = () => {
   let navbarCloseli = document.createElement("li");
   let navbarCloseBtn = document.createElement("button");
   let navbarCloseBtnImg = document.createElement("img");
-  // navbar home
-  let navbarHomeLi = document.createElement("li");
-  let navbarHomeLink = document.createElement("a");
   // navbar input
   let navbarInputLi = document.createElement("li");
   let navbarInput = document.createElement("input");
@@ -239,11 +239,6 @@ const Header = () => {
   navbarCloseBtnImg.classList.add("navbar-close-btn-img");
   navbarCloseBtnImg.src = "./assets/icons/menu/menu-white/close-white.svg";
   navbarCloseBtnImg.alt = "close-btn";
-  // navbar > home link
-  navbarHomeLi.classList.add("home-li");
-  navbarHomeLink.classList.add("home-link");
-  navbarHomeLink.href = "#";
-  navbarHomeLink.textContent = "Home";
   // navbar input
   navbarInputLi.classList.add("input-li");
   navbarInput.classList.add("search-input");
@@ -291,9 +286,6 @@ const Header = () => {
   navbarUl.appendChild(navbarCloseli);
   navbarCloseli.appendChild(navbarCloseBtn);
   navbarCloseBtn.appendChild(navbarCloseBtnImg);
-  //   navbar homw link
-  navbarUl.appendChild(navbarHomeLi);
-  navbarHomeLi.appendChild(navbarHomeLink);
   // navbar input
   navbarUl.appendChild(navbarInputLi);
   navbarInputLi.appendChild(navbarInput);
@@ -383,6 +375,15 @@ const MoviesBoxesSlider = () => {
       moviesBoxImgContainer.appendChild(moviesBoxImg);
       moviesBox.appendChild(moviesBoxTitleContainer);
       moviesBoxTitleContainer.appendChild(moviesBoxTitleH3);
+
+      // events
+      moviesBoxImg.addEventListener("click", (Event) => {
+        // ,
+        Mount(
+          MoviesInformation(Event.target.alt),
+          document.getElementById("main-container")
+        );
+      });
     }
 
     step = count + 1;
@@ -393,26 +394,27 @@ const MoviesBoxesSlider = () => {
   return moviesBoxSection;
 };
 // ###-MovieInformations-###
-const MoviesInformation = (movieId) => {
+const MoviesInformation = (movieName) => {
+  let moviesInformationSection = document.createElement("section");
   // unmount all sliders
   listUnMount(document.querySelectorAll(".movie-boxes"));
-  // get movieData
-  let moviesInformationSection = document.createElement("section");
-
+  // removie infinite scroll event
+  window.removeEventListener("scroll", infiniteScroll);
   let configMoviesInformationPage = async () => {
+    // get movieData
     let movieData = await GetAllMovies();
-
+    let targetMovie = await movieData.find((movie) => movie.name === movieName);
+    console.log(targetMovie);
     // creating moviesinformation elements
     let moviesInformationContainer = document.createElement("div");
     // movies poster
     let moviesInformationImgContainer = document.createElement("div");
     let moviesInformationImg = document.createElement("img");
+    // movie name
+    let movieInformationsNameContainer = document.createElement("div");
+    let movieInformationsNameh2 = document.createElement("h2");
     // description
     let moviesInformationDescriptionContainer = document.createElement("div");
-    let moviesInformationP = document.createElement("p");
-    // Scenes
-    let moviesInformationScenesContainer = document.createElement("div");
-    let moviesInformationScenesImg = document.createElement("img");
 
     // classlist , src , type ...
     moviesInformationSection.classList.add("movies-information-section");
@@ -420,30 +422,32 @@ const MoviesInformation = (movieId) => {
     moviesInformationImgContainer.classList.add(
       "movie-information-image-container"
     );
-    moviesInformationImg.src = movieData[movieId].image.medium;
-    moviesInformationImg.alt = "movies-poster";
+    // movie name
+    moviesInformationContainer.classList.add('movie-name-contaner');
+    movieInformationsNameh2.textContent = targetMovie.name;
+    movieInformationsNameh2.classList.add('movie-name')
+    // movie img
+    moviesInformationImg.src = targetMovie.image.medium;
+    moviesInformationImg.alt = targetMovie.name;
     moviesInformationDescriptionContainer.classList.add(
       "movies-information-description"
     );
-    moviesInformationP.textContent =
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae dicta, esse quaerat maxime veritatis perspiciatis optio accusantium incidunt suscipit soluta consectetur accusamus quo ullam! Voluptatibus accusantium voluptatum voluptate id laboriosam unde, explicabo corporis quae ratione quam itaque, ipsum praesentium recusandae dolores in autem nesciunt? Eligendi doloremque sit maiores cupiditate!";
-    moviesInformationScenesContainer.classList.add("movies-information-scenes");
-    moviesInformationScenesImg.classList.add("movies-information-scenes-img");
-    moviesInformationScenesImg.src = "./assets/img/3.jpg";
-    moviesInformationScenesImg.alt = "movies-scenes";
+    // movie description
+    moviesInformationDescriptionContainer.innerHTML = targetMovie.summary;
 
     // append
     moviesInformationSection.appendChild(moviesInformationContainer);
     moviesInformationContainer.appendChild(moviesInformationImgContainer);
     moviesInformationImgContainer.appendChild(moviesInformationImg);
+    // movie name
+    moviesInformationContainer.appendChild(movieInformationsNameContainer);
+    movieInformationsNameContainer.appendChild(movieInformationsNameh2);
+    // descript
     moviesInformationContainer.appendChild(
       moviesInformationDescriptionContainer
     );
-    moviesInformationDescriptionContainer.appendChild(moviesInformationP);
-    moviesInformationContainer.appendChild(moviesInformationScenesContainer);
-    moviesInformationScenesContainer.appendChild(moviesInformationScenesImg);
-  };
 
+  };
   configMoviesInformationPage();
 
   // return
