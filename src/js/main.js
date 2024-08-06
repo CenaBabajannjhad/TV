@@ -72,7 +72,7 @@ const infiniteScroll = () => {
       setTimeout(() => {
         UnMount(document.querySelector(".loading-section"));
         Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
-      }, 2000);
+      }, 1000);
     }
   }
 };
@@ -182,33 +182,65 @@ const Header = () => {
   // navabr movies option
   let navbarMoviesLi = document.createElement("li");
   let navbarMoviesSelect = document.createElement("select");
-  // let navbarMoviesOption = document.createElement("option");
-  // ####################################################
+  let navbarMoviesOptionOne = document.createElement("option");
   // input value
   const getInputValue = () => {};
-  // ####################################################
-  // ####################################################
+
   // **movies options value from API**
   const moviesOptionValue = async () => {
     let movieData = await GetAllMovies();
+    navbarMoviesOptionOne.textContent = "select movie";
+    navbarMoviesSelect.appendChild(navbarMoviesOptionOne);
+
     movieData.forEach((item) => {
-      let navbarMoviesOption = document.createElement("option");
+      let navbarMoviesOption = document.createElement("option", "m-option");
       navbarMoviesOption.id = item.id;
       navbarMoviesOption.textContent = item.name;
+      navbarMoviesOption.value = item.name;
       navbarMoviesSelect.appendChild(navbarMoviesOption);
     });
+
+    let showDataFromOptions = (Event) => {
+      if(Event.target.value !== 'select movie'){
+        console.log(Event.target.value)
+        episodeOptionValue(Event.target.value);
+
+        // if there was movies slider remove they
+        if(document.querySelector('.movie-boxes-section')){
+          //unmount they 
+          listUnMount(document.querySelectorAll(".movie-boxes"));
+
+          // mount movie information page
+          Mount(MoviesInformation(Event.target.value) , document.getElementById("main-container"))
+
+          // if in mobile selected user with side navbar , removing side navbar
+          if(root.parentElement.classList[0] === 'overflow-hidden'){
+            document.querySelector('.Navbar-wrapper').classList.remove('show-sideNavbar');
+          }
+        }
+      }
+    }
+    navbarMoviesSelect.addEventListener('click' , showDataFromOptions);   
   };
   moviesOptionValue();
-  // ####################################################
   // navbar episode option
   let navbarEpisodeLi = document.createElement("li");
   let navbarEpisodeSelect = document.createElement("select");
   let navbarEpisodeOptions = document.createElement("option");
-  // ####################################################
-  const episodeOptionValue = async () => {
-    alert("hi");
+  // **episodes options value from API**
+  const episodeOptionValue = async (target) => {
+    let movieData = await GetAllMovies();
+    let currentMovie = await movieData.find(item => item.name === `${target}`);
+    let id = currentMovie.id;
+    let URL = `https://api.tvmaze.com/shows/${id}/episodes`
+    try{
+      let episodesRes = await fetch(URL);
+      let json = await episodesRes.json();
+      console.log(json)
+    }catch(err){
+      console.log(err)
+    }
   };
-  // ####################################################
   // **add class , id , src...**
   headerContainer.classList.add("container", "header-container");
   // logo area
@@ -399,11 +431,11 @@ const MoviesBoxesSlider = () => {
 };
 // ###-MovieInformations-###
 const MoviesInformation = (movieName) => {
+  // removie infinite scroll event
+  window.removeEventListener("scroll", infiniteScroll);
   let moviesInformationSection = document.createElement("section");
   // unmount all sliders
   listUnMount(document.querySelectorAll(".movie-boxes"));
-  // removie infinite scroll event
-  window.removeEventListener("scroll", infiniteScroll);
   let configMoviesInformationPage = async () => {
     // get movieData
     let movieData = await GetAllMovies();
@@ -425,6 +457,7 @@ const MoviesInformation = (movieName) => {
       count = 10;
       Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
       Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
+      window.addEventListener("scroll", infiniteScroll);
     });
     // movies poster
     let moviesInformationImgContainer = document.createElement("div");

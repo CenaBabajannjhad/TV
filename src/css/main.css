@@ -33,6 +33,9 @@ body {
 .body-darkmode {
   background: var(--gray);
 }
+.header-dark {
+  background-color: var(--gray);
+}
 .none {
   display: none;
 }
@@ -52,7 +55,7 @@ body {
 /* loading area */
 .loading-section {
   text-align: center;
-  padding-bottom: 50px;
+  padding-bottom: 100px;
 }
 .loading-el {
   width: 50px;
@@ -87,9 +90,7 @@ body {
 /* ********************* */
 /***** header area ******/
 /* ******************* */
-.header-dark {
-  background-color: var(--gray);
-}
+
 header {
   position: sticky;
   top: 0;
