@@ -9,15 +9,15 @@ function App() {
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
 }
-// mount
+// mount Element
 const Mount = (element, place = root) => {
   place.appendChild(element);
 };
-// unMount
+// unMount Element
 const UnMount = (element) => {
   element.remove();
 };
-// listUnMount
+// listUnMount Elements [ node list ]
 const listUnMount = (element) => {
   element.forEach((item) => item.remove());
 };
@@ -146,7 +146,7 @@ const inActiveDarkmode = (
     }
   });
 };
-// components
+// ****components****
 // ###-header-###
 const Header = () => {
   //create header elements
@@ -324,21 +324,10 @@ const Header = () => {
   };
   moviesOptionValue();
   // **episodes options value from API**
-  const episodeOptionValue = async (target) => {
-    let movieData = await GetAllMovies();
-    let currentMovie = await movieData.find(
-      (item) => item.name === `${target}`
-    );
-    let id = currentMovie.id;
-    let URL = `https://api.tvmaze.com/shows/${id}/episodes`;
-    try {
-      let episodesRes = await fetch(URL);
-      let json = await episodesRes.json();
-
-    } catch (err) {
-      console.log(err);
-    }
+  const seasonsOptionValue = async () => {
+    // https://api.tvmaze.com/shows/169/seasons
   };
+  seasonsOptionValue()
   // ** append **
   header.appendChild(headerContainer);
   // logo area
@@ -600,7 +589,7 @@ const Box = (name , src , id) => {
   moviesBox.addEventListener('click' , () => {
     resetInput(document.querySelector('#search'))
     UnMount(boxContainer , document.querySelector('#main-container'));
-    Mount(MoviesInformation(name) , document.querySelector('#main-container'))
+    Mount(MoviesInformation(name) , document.querySelector('#main-container'));
   })
 
   // return
