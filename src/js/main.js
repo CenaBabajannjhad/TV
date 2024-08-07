@@ -115,9 +115,6 @@ const activeDarkmode = (
         .querySelector(".movies-information-description")
         .classList.add("darkmode-desc");
     }
-    // --BUG-- when darkmode clicked loading loading.src must change , now it's dosen't change becuse loading dosen't mount in app and this return null
-    // document.querySelector(".loading-el").src =
-    //   "./assets/gif/loading/dark-loading.gif";
   });
 };
 //darkmode remover
@@ -142,8 +139,6 @@ const inActiveDarkmode = (
         .querySelector(".movies-information-description")
         .classList.remove("darkmode-desc");
     }
-    // document.querySelector(".loading-el").src =
-    //   "./assets/gif/loading/loading.gif";
   });
 };
 // components
@@ -188,7 +183,6 @@ const Header = () => {
   let navbarEpisodeLi = document.createElement("li");
   let navbarEpisodeSelect = document.createElement("select");
   let navbarEpisodeOptions = document.createElement("option");
-
   // **add class , id , src...**
   headerContainer.classList.add("container", "header-container");
   // logo area
@@ -216,7 +210,6 @@ const Header = () => {
   hamburgerButton.id = "menu-icon";
   hamburgerImageBtn.classList.add("hamburger");
   hamburgerImageBtn.src = "./assets/icons/menu/menu-black/menu.svg";
-
   hamburgerImageBtn.alt = "hamburger-button";
   // navbar area
   navbarUl.classList.add("Navbar-wrapper");
@@ -248,8 +241,6 @@ const Header = () => {
   navbarEpisodeSelect.classList.add("episode-option");
   navbarEpisodeSelect.id = "episode-option";
   navbarEpisodeOptions.textContent = "episode";
-
-
   // input value
   const LiveSearchInput = async (Event) => {
     // w
@@ -291,8 +282,6 @@ const Header = () => {
     })
   }
   navbarInput.addEventListener('input' , LiveSearchInput)
-
-
   // **movies options value from API**
   const moviesOptionValue = async () => {
     let movieData = await GetAllMovies();
@@ -307,7 +296,6 @@ const Header = () => {
       navbarMoviesSelect.appendChild(navbarMoviesOption);
     });
   };
-
   moviesOptionValue();
   // **episodes options value from API**
   const episodeOptionValue = async (target) => {
@@ -325,7 +313,6 @@ const Header = () => {
       console.log(err);
     }
   };
-
   // ** append **
   header.appendChild(headerContainer);
   // logo area
