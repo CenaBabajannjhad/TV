@@ -1,6 +1,7 @@
 const root = document.getElementById("root");
 let isDarkMode = false;
 let isSideNavbarOpen = false;
+let isMovieInfo = false;
 window.addEventListener("DOMContentLoaded", App);
 function App() {
   Mount(Header());
@@ -20,6 +21,10 @@ const UnMount = (element) => {
 const listUnMount = (element) => {
   element.forEach((item) => item.remove());
 };
+// reset input value
+const resetInput = (element) => {
+  element.value = '';
+}
 // ##get all movies , i get 321 becuse i get more then this number , chorm memory usage increased , increase 1GB , and makes site slow##
 const GetAllMovies = async () => {
   let movies;
@@ -244,11 +249,12 @@ const Header = () => {
   // input value
   const LiveSearchInput = async (Event) => {
     // w
+    console.log(Boolean(document.querySelector('.box-container')))
     if(document.querySelector('.box-container')){
-      UnMount(document.querySelector('.single-box') , document.querySelector('.box-container'))
+      listUnMount(document.querySelectorAll('.single-box') , document.querySelector('.box-container'))
     }
     let moviesData = await GetAllMovies();
-    let searchValue = Event.target.value.toLowerCase();
+    let searchValue = Event.target.value;
     // search in data
     let movieNameInfo = moviesData.filter(item => {
       if(searchValue){
@@ -266,20 +272,25 @@ const Header = () => {
     window.removeEventListener("scroll", infiniteScroll);
     listUnMount(document.querySelectorAll(".movie-boxes"));
     // if
-    if(movieS.length === 0){
-      let count = document.querySelectorAll('.single-box')
-      for(let i = 0 ; i < count.length - 1; i++){
-        document.querySelector('.box-container').remove(document.querySelector('.single-box'))
-
-        window.addEventListener("scroll", infiniteScroll);
-        Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
-        Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
-      }
+    if(movieS){
+      movieS.forEach(item => {
+        Mount(Box(item.name , item.image.medium , item.id) , document.getElementById("main-container"))
+      })
     }
-    // for all items
-    movieS.forEach(item => {
-      Mount(Box(item.name , item.image.medium , item.id) , document.getElementById("main-container"))
-    })
+
+    if(isMovieInfo){
+      isMovieInfo = false;
+      UnMount(document.querySelector('.movies-information-section') , document.querySelector('#main-container'))
+    }
+
+    if(movieS.length === 0 || movieS === null || movieS === undefined){
+      let singleBoxes = document.querySelectorAll('.single-box')
+      listUnMount(singleBoxes , document.querySelector('.box-container'))
+      
+      window.addEventListener("scroll", infiniteScroll);
+      Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
+      Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
+    }
   }
   navbarInput.addEventListener('input' , LiveSearchInput)
   // **movies options value from API**
@@ -294,7 +305,22 @@ const Header = () => {
       navbarMoviesOption.textContent = item.name;
       navbarMoviesOption.value = item.name;
       navbarMoviesSelect.appendChild(navbarMoviesOption);
+
     });
+    navbarMoviesSelect.addEventListener('change' , (Event) => {
+      if(isMovieInfo === false){
+        Mount(MoviesInformation(Event.target.value) , document.querySelector('#main-container'));
+      }
+      if(document.querySelector('.movies-information-section')){
+        UnMount(document.querySelector('.movies-information-section') , document.querySelector('#main-container'));
+        Mount(MoviesInformation(Event.target.value) , document.querySelector('#main-container'));
+      }
+      
+      if(isSideNavbarOpen){
+        document.querySelector('.Navbar-wrapper').classList.remove('show-sideNavbar');
+        isSideNavbarOpen = false;
+      }
+    })
   };
   moviesOptionValue();
   // **episodes options value from API**
@@ -441,7 +467,9 @@ const MoviesBoxesSlider = () => {
   return moviesBoxSection;
 };
 // ###-MovieInformations-###
+let counter = 0;
 const MoviesInformation = (movieName) => {
+  isMovieInfo = true;
   // removie infinite scroll event
   window.removeEventListener("scroll", infiniteScroll);
   let moviesInformationSection = document.createElement("section");
@@ -460,6 +488,8 @@ const MoviesInformation = (movieName) => {
     let backButtonElement = document.createElement("button");
     // backbtn event
     backButtonElement.addEventListener("click", () => {
+      isMovieInfo = false;
+      resetInput(document.querySelector('#search'))
       UnMount(
         moviesInformationSection,
         document.getElementById("main-container")
@@ -481,6 +511,7 @@ const MoviesInformation = (movieName) => {
 
     // classlist , src , type ...
     moviesInformationSection.classList.add("movies-information-section");
+    moviesInformationSection.id = counter;
     moviesInformationContainer.classList.add("container", "movies-information");
     moviesInformationImgContainer.classList.add(
       "movie-information-image-container"
@@ -534,13 +565,13 @@ const MoviesInformation = (movieName) => {
     sectionBttomContainer.appendChild(moviesInformationDescriptionContainer);
   };
   configMoviesInformationPage();
-
+  counter++;
   // return
   return moviesInformationSection;
 };
 // ##-Box-##
 let boxContainer = document.createElement('section');
-boxContainer.classList.add('box-container');
+boxContainer.classList.add('box-container' , "single-box-container");
 const Box = (name , src , id) => {
   let moviesBox = document.createElement("div");
   let moviesBoxImgContainer = document.createElement("div");
@@ -556,12 +587,21 @@ const Box = (name , src , id) => {
   moviesBoxImg.id = id;
   moviesBoxTitleContainer.classList.add("single-box-title-container");
   moviesBoxTitleH3.textContent = name;
+  moviesBoxTitleH3.classList.add('box-name')
+
   // append
   boxContainer.appendChild(moviesBox)
   moviesBox.appendChild(moviesBoxImgContainer);
   moviesBoxImgContainer.appendChild(moviesBoxImg);
   moviesBox.appendChild(moviesBoxTitleContainer);
   moviesBoxTitleContainer.appendChild(moviesBoxTitleH3);
+
+  // event
+  moviesBox.addEventListener('click' , () => {
+    resetInput(document.querySelector('#search'))
+    UnMount(boxContainer , document.querySelector('#main-container'));
+    Mount(MoviesInformation(name) , document.querySelector('#main-container'))
+  })
 
   // return
   return boxContainer;

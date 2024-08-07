@@ -318,6 +318,9 @@ header {
   width: fit-content;
   border-radius: 5px;
   background: var(--gray-bg) !important;
+
+  margin-right: auto;
+  margin-left: auto;
 }
 .single-box:hover {
   cursor: pointer;
@@ -337,8 +340,9 @@ header {
   padding-bottom: 5px;
 }
 .box-container{
+  margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(4 , 1fr);
+  grid-template-columns: repeat(1 , 1fr);
   row-gap: 10px;
 }
 /* ********************* */
@@ -349,17 +353,32 @@ header {
   .container {
     max-width: 475px;
   }
+  .box-container{
+    display: grid;
+    grid-template-columns: repeat(2 , 1fr);
+    row-gap: 10px;
+  }
 }
 /* sm */
 @media screen and (min-width: 640px) {
   .container {
     max-width: 640px;
   }
+  .box-container{
+    display: grid;
+    grid-template-columns: repeat(3 , 1fr);
+    gap: 1px;
+  }
 }
 /* md */
 @media screen and (min-width: 768px) {
   .container {
     max-width: 768px;
+  }
+  .box-container{
+    display: grid;
+    grid-template-columns: repeat(3 , 1fr);
+    row-gap: 10px;
   }
 }
 /* lg */
@@ -446,63 +465,67 @@ header {
     box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
       rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
   }
-  
-/* movies-information-section */
-.movie-information-image-container > img {
-  border-radius: 5px;
-  width: 350px;
-}
-.movies-information-section {
-  padding-top: 20px;
-}
-.movies-information {
-  display: grid;
-  grid-template-columns: repeat(2 , 1fr);
-  column-gap: 10px;
-}
-.sec-2{
-  margin-top: 130px;
-}
-.movie-information-image-container {
-  margin-bottom: 10px;
-}
-.movies-information-description {
-  margin-bottom: 20px;
-}
-.movies-information-description > p {
-  text-align: justify;
-  line-height: 22px;
-  padding-right: 5px;
-  padding-left: 5px;
-}
-.movies-information-scenes-img {
-  margin-bottom: 20px;
-  border-radius: 5px;
-  width: 300px !important;
-}
-.movie-name {
-  margin-bottom: 10px;
-  text-align: left !important;
-}
-/* genre */
-.movie-genres-container {
-  display: flex;
-  align-items: center;
-  justify-content: start !important;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 15px;
-}
+  /* movies-information-section */
+  .movie-information-image-container > img {
+    border-radius: 5px;
+    width: 350px;
+  }
+  .movies-information-section {
+    padding-top: 20px;
+  }
+  .movies-information {
+    display: grid;
+    grid-template-columns: repeat(2 , 1fr);
+    column-gap: 10px;
+  }
+  .sec-2{
+    margin-top: 130px;
+  }
+  .movie-information-image-container {
+    margin-bottom: 10px;
+  }
+  .movies-information-description {
+    margin-bottom: 20px;
+  }
+  .movies-information-description > p {
+    text-align: justify;
+    line-height: 22px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+  .movies-information-scenes-img {
+    margin-bottom: 20px;
+    border-radius: 5px;
+    width: 300px !important;
+  }
+  .movie-name {
+    margin-bottom: 10px;
+    text-align: left !important;
+  }
+  /* genre */
+  .movie-genres-container {
+    display: flex;
+    align-items: center;
+    justify-content: start !important;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+  }
 
-.movie-genres-container > div {
-  background-color: none;
-  border: 1px solid var(--main-red);
-  color: var(--main-red);
-  text-transform: capitalize;
-  padding: 5px 5px;
-  border-radius: 5px;
-  transition: background-color 0.2s ease-in-out;
-}
+  .movie-genres-container > div {
+    background-color: none;
+    border: 1px solid var(--main-red);
+    color: var(--main-red);
+    text-transform: capitalize;
+    padding: 5px 5px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  .box-container{
+    display: grid;
+    grid-template-columns: repeat(4 , 1fr);
+    row-gap: 10px;
+  }
 }
 /* xl */
 @media screen and (min-width: 1280px) {
@@ -579,6 +602,11 @@ header {
     border-radius: var(--border-radius-value);
     border: none;
     background: #b2b2b2;
+  }
+  .box-container{
+    display: grid;
+    grid-template-columns: repeat(4 , 1fr);
+    row-gap: 10px;
   }
 }
 
@@ -658,5 +686,10 @@ header {
     border-radius: var(--border-radius-value);
     border: none;
     background: #b2b2b2;
+  }
+  .box-container{
+    display: grid;
+    grid-template-columns: repeat(4 , 1fr);
+    row-gap: 10px;
   }
 }
