@@ -1,14 +1,13 @@
 const root = document.getElementById("root");
 let isDarkMode = false;
+let isSideNavbarOpen = false;
 window.addEventListener("DOMContentLoaded", App);
-
 function App() {
   Mount(Header());
   Mount(Main());
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
 }
-
 // mount
 const Mount = (element, place = root) => {
   place.appendChild(element);
@@ -72,24 +71,26 @@ const infiniteScroll = () => {
       setTimeout(() => {
         UnMount(document.querySelector(".loading-section"));
         Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
-      }, 1000);
+      }, 1500);
     }
   }
 };
 window.addEventListener("scroll", infiniteScroll);
 // side navbar Event
-const showSideNavbar = (element, target, className) => {
-  element.addEventListener("click", () => {
-    target.classList.add(className);
-    root.parentElement.classList.add("overflow-hidden");
-  });
+const showSideNavbar = () => {
+  let className = "show-sideNavbar";
+  let navbar = document.querySelector(".Navbar-wrapper");
+  navbar.classList.add(className);
+  root.parentElement.classList.add("overflow-hidden");
+  isSideNavbarOpen = true;
 };
 // remove side navbar
-const removeSideNavbar = (element, target, className) => {
-  element.addEventListener("click", () => {
-    target.classList.remove(className);
-    root.parentElement.classList.remove("overflow-hidden");
-  });
+const removeSideNavbar = () => {
+  let className = "show-sideNavbar";
+  let navbar = document.querySelector(".Navbar-wrapper");
+  navbar.classList.remove(className);
+  root.parentElement.classList.remove("overflow-hidden");
+  isSideNavbarOpen = false;
 };
 // darkmode handler
 const activeDarkmode = (
@@ -183,64 +184,11 @@ const Header = () => {
   let navbarMoviesLi = document.createElement("li");
   let navbarMoviesSelect = document.createElement("select");
   let navbarMoviesOptionOne = document.createElement("option");
-  // input value
-  const getInputValue = () => {};
-
-  // **movies options value from API**
-  const moviesOptionValue = async () => {
-    let movieData = await GetAllMovies();
-    navbarMoviesOptionOne.textContent = "select movie";
-    navbarMoviesSelect.appendChild(navbarMoviesOptionOne);
-
-    movieData.forEach((item) => {
-      let navbarMoviesOption = document.createElement("option", "m-option");
-      navbarMoviesOption.id = item.id;
-      navbarMoviesOption.textContent = item.name;
-      navbarMoviesOption.value = item.name;
-      navbarMoviesSelect.appendChild(navbarMoviesOption);
-    });
-
-    let showDataFromOptions = (Event) => {
-      if(Event.target.value !== 'select movie'){
-        console.log(Event.target.value)
-        episodeOptionValue(Event.target.value);
-
-        // if there was movies slider remove they
-        if(document.querySelector('.movie-boxes-section')){
-          //unmount they 
-          listUnMount(document.querySelectorAll(".movie-boxes"));
-
-          // mount movie information page
-          Mount(MoviesInformation(Event.target.value) , document.getElementById("main-container"))
-
-          // if in mobile selected user with side navbar , removing side navbar
-          if(root.parentElement.classList[0] === 'overflow-hidden'){
-            document.querySelector('.Navbar-wrapper').classList.remove('show-sideNavbar');
-          }
-        }
-      }
-    }
-    navbarMoviesSelect.addEventListener('click' , showDataFromOptions);   
-  };
-  moviesOptionValue();
   // navbar episode option
   let navbarEpisodeLi = document.createElement("li");
   let navbarEpisodeSelect = document.createElement("select");
   let navbarEpisodeOptions = document.createElement("option");
-  // **episodes options value from API**
-  const episodeOptionValue = async (target) => {
-    let movieData = await GetAllMovies();
-    let currentMovie = await movieData.find(item => item.name === `${target}`);
-    let id = currentMovie.id;
-    let URL = `https://api.tvmaze.com/shows/${id}/episodes`
-    try{
-      let episodesRes = await fetch(URL);
-      let json = await episodesRes.json();
-      console.log(json)
-    }catch(err){
-      console.log(err)
-    }
-  };
+
   // **add class , id , src...**
   headerContainer.classList.add("container", "header-container");
   // logo area
@@ -301,6 +249,83 @@ const Header = () => {
   navbarEpisodeSelect.id = "episode-option";
   navbarEpisodeOptions.textContent = "episode";
 
+
+  // input value
+  const LiveSearchInput = async (Event) => {
+    // w
+    if(document.querySelector('.box-container')){
+      UnMount(document.querySelector('.single-box') , document.querySelector('.box-container'))
+    }
+    let moviesData = await GetAllMovies();
+    let searchValue = Event.target.value.toLowerCase();
+    // search in data
+    let movieNameInfo = moviesData.filter(item => {
+      if(searchValue){
+        return item.name.toLowerCase().includes(searchValue);
+      }else{
+        return null
+      }
+    });
+    console.log(movieNameInfo)
+    showSearchInputResult(movieNameInfo)
+  };
+  // showing search result
+  const showSearchInputResult = (movieS) => {
+    // sliders and they event removed
+    window.removeEventListener("scroll", infiniteScroll);
+    listUnMount(document.querySelectorAll(".movie-boxes"));
+    // if
+    if(movieS.length === 0){
+      let count = document.querySelectorAll('.single-box')
+      for(let i = 0 ; i < count.length - 1; i++){
+        document.querySelector('.box-container').remove(document.querySelector('.single-box'))
+
+        window.addEventListener("scroll", infiniteScroll);
+        Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
+        Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
+      }
+    }
+    // for all items
+    movieS.forEach(item => {
+      Mount(Box(item.name , item.image.medium , item.id) , document.getElementById("main-container"))
+    })
+  }
+  navbarInput.addEventListener('input' , LiveSearchInput)
+
+
+  // **movies options value from API**
+  const moviesOptionValue = async () => {
+    let movieData = await GetAllMovies();
+    navbarMoviesOptionOne.textContent = "select movie";
+    navbarMoviesSelect.appendChild(navbarMoviesOptionOne);
+
+    movieData.forEach((item) => {
+      let navbarMoviesOption = document.createElement("option", "m-option");
+      navbarMoviesOption.id = item.id;
+      navbarMoviesOption.textContent = item.name;
+      navbarMoviesOption.value = item.name;
+      navbarMoviesSelect.appendChild(navbarMoviesOption);
+    });
+  };
+
+  moviesOptionValue();
+  // **episodes options value from API**
+  const episodeOptionValue = async (target) => {
+    let movieData = await GetAllMovies();
+    let currentMovie = await movieData.find(
+      (item) => item.name === `${target}`
+    );
+    let id = currentMovie.id;
+    let URL = `https://api.tvmaze.com/shows/${id}/episodes`;
+    try {
+      let episodesRes = await fetch(URL);
+      let json = await episodesRes.json();
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // ** append **
   header.appendChild(headerContainer);
   // logo area
@@ -342,8 +367,8 @@ const Header = () => {
   navbarEpisodeSelect.appendChild(navbarEpisodeOptions);
   // ******header Events******
   // **sidebar events**
-  showSideNavbar(hamburgerButton, navbarUl, "show-sideNavbar");
-  removeSideNavbar(navbarCloseBtn, navbarUl, "show-sideNavbar");
+  hamburgerButton.addEventListener("click", showSideNavbar);
+  navbarCloseBtn.addEventListener("click", removeSideNavbar);
   // **darkmode event**
   // darkmode active
   activeDarkmode(
@@ -397,7 +422,6 @@ const MoviesBoxesSlider = () => {
       let moviesBoxTitleH3 = document.createElement("h3");
       // attributes
       moviesBoxSection.classList.add("movie-boxes-section", "movie-boxes");
-      // moviesBoxesContainer.classList.add("box");
       moviesBox.classList.add("box");
       moviesBoxImgContainer.classList.add("boxes-img-container");
       moviesBoxImg.src = movieData[i].image.medium;
@@ -526,4 +550,32 @@ const MoviesInformation = (movieName) => {
 
   // return
   return moviesInformationSection;
+};
+// ##-Box-##
+let boxContainer = document.createElement('section');
+boxContainer.classList.add('box-container');
+const Box = (name , src , id) => {
+  let moviesBox = document.createElement("div");
+  let moviesBoxImgContainer = document.createElement("div");
+  let moviesBoxImg = document.createElement("img");
+  // img title
+  let moviesBoxTitleContainer = document.createElement("div");
+  let moviesBoxTitleH3 = document.createElement("h3");
+  // attributes
+  moviesBox.classList.add("single-box");
+  moviesBoxImgContainer.classList.add("single-box-img-container");
+  moviesBoxImg.src = src;
+  moviesBoxImg.alt = name;
+  moviesBoxImg.id = id;
+  moviesBoxTitleContainer.classList.add("single-box-title-container");
+  moviesBoxTitleH3.textContent = name;
+  // append
+  boxContainer.appendChild(moviesBox)
+  moviesBox.appendChild(moviesBoxImgContainer);
+  moviesBoxImgContainer.appendChild(moviesBoxImg);
+  moviesBox.appendChild(moviesBoxTitleContainer);
+  moviesBoxTitleContainer.appendChild(moviesBoxTitleH3);
+
+  // return
+  return boxContainer;
 };

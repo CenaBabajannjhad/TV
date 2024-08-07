@@ -313,6 +313,34 @@ header {
   border-radius: 5px;
   transition: background-color 0.2s ease-in-out;
 }
+/* single box */
+.single-box{
+  width: fit-content;
+  border-radius: 5px;
+  background: var(--gray-bg) !important;
+}
+.single-box:hover {
+  cursor: pointer;
+}
+.boxes-title-container {
+  padding-bottom: 5px;
+  padding-left: 5px;
+  font-size: 0.8rem;
+}
+.single-box-img-container > img {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.single-box-title-container > h3 {
+  font-size: 0.8rem !important;
+  padding-left: 5px;
+  padding-bottom: 5px;
+}
+.box-container{
+  display: grid;
+  grid-template-columns: repeat(4 , 1fr);
+  row-gap: 10px;
+}
 /* ********************* */
 /*** responsive queries */
 /* ******************* */
