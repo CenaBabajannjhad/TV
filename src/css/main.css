@@ -345,6 +345,19 @@ header {
   grid-template-columns: repeat(1 , 1fr);
   row-gap: 10px;
 }
+/* season */
+.border{
+  border: 1px solid black;
+}
+.season{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+  text-align: center;
+}
+.season-desc-container{
+  margin-bottom: 10px;
+}
 /* ********************* */
 /*** responsive queries */
 /* ******************* */
@@ -526,6 +539,7 @@ header {
     grid-template-columns: repeat(4 , 1fr);
     row-gap: 10px;
   }
+
 }
 /* xl */
 @media screen and (min-width: 1280px) {

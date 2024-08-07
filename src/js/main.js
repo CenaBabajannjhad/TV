@@ -4,6 +4,10 @@ let isSideNavbarOpen = false;
 let isMovieInfo = false;
 window.addEventListener("DOMContentLoaded", App);
 function App() {
+  homeSetup()
+}
+// home setup
+const homeSetup = (status) => {
   Mount(Header());
   Mount(Main());
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
@@ -188,7 +192,8 @@ const Header = () => {
   let navbarEpisodeLi = document.createElement("li");
   let navbarEpisodeSelect = document.createElement("select");
   let navbarEpisodeOptions = document.createElement("option");
-  // **add class , id , src...**
+  // ###########################
+  // **attributes**
   headerContainer.classList.add("container", "header-container");
   // logo area
   logoWrapper.classList.add("logo-wrapper");
@@ -246,89 +251,8 @@ const Header = () => {
   navbarEpisodeSelect.classList.add("episode-option");
   navbarEpisodeSelect.id = "episode-option";
   navbarEpisodeOptions.textContent = "episode";
-  // input value
-  const LiveSearchInput = async (Event) => {
-    // w
-    console.log(Boolean(document.querySelector('.box-container')))
-    if(document.querySelector('.box-container')){
-      listUnMount(document.querySelectorAll('.single-box') , document.querySelector('.box-container'))
-    }
-    let moviesData = await GetAllMovies();
-    let searchValue = Event.target.value;
-    // search in data
-    let movieNameInfo = moviesData.filter(item => {
-      if(searchValue){
-        return item.name.toLowerCase().includes(searchValue);
-      }else{
-        return null
-      }
-    });
-    console.log(movieNameInfo)
-    showSearchInputResult(movieNameInfo)
-  };
-  // showing search result
-  const showSearchInputResult = (movieS) => {
-    // sliders and they event removed
-    window.removeEventListener("scroll", infiniteScroll);
-    listUnMount(document.querySelectorAll(".movie-boxes"));
-    // if
-    if(movieS){
-      movieS.forEach(item => {
-        Mount(Box(item.name , item.image.medium , item.id) , document.getElementById("main-container"))
-      })
-    }
-
-    if(isMovieInfo){
-      isMovieInfo = false;
-      UnMount(document.querySelector('.movies-information-section') , document.querySelector('#main-container'))
-    }
-
-    if(movieS.length === 0 || movieS === null || movieS === undefined){
-      let singleBoxes = document.querySelectorAll('.single-box')
-      listUnMount(singleBoxes , document.querySelector('.box-container'))
-      
-      window.addEventListener("scroll", infiniteScroll);
-      Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
-      Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
-    }
-  }
-  navbarInput.addEventListener('input' , LiveSearchInput)
-  // **movies options value from API**
-  const moviesOptionValue = async () => {
-    let movieData = await GetAllMovies();
-    navbarMoviesOptionOne.textContent = "select movie";
-    navbarMoviesSelect.appendChild(navbarMoviesOptionOne);
-
-    movieData.forEach((item) => {
-      let navbarMoviesOption = document.createElement("option", "m-option");
-      navbarMoviesOption.id = item.id;
-      navbarMoviesOption.textContent = item.name;
-      navbarMoviesOption.value = item.name;
-      navbarMoviesSelect.appendChild(navbarMoviesOption);
-
-    });
-    navbarMoviesSelect.addEventListener('change' , (Event) => {
-      if(isMovieInfo === false){
-        Mount(MoviesInformation(Event.target.value) , document.querySelector('#main-container'));
-      }
-      if(document.querySelector('.movies-information-section')){
-        UnMount(document.querySelector('.movies-information-section') , document.querySelector('#main-container'));
-        Mount(MoviesInformation(Event.target.value) , document.querySelector('#main-container'));
-      }
-      
-      if(isSideNavbarOpen){
-        document.querySelector('.Navbar-wrapper').classList.remove('show-sideNavbar');
-        isSideNavbarOpen = false;
-      }
-    })
-  };
-  moviesOptionValue();
-  // **episodes options value from API**
-  const seasonsOptionValue = async () => {
-    // https://api.tvmaze.com/shows/169/seasons
-  };
-  seasonsOptionValue()
-  // ** append **
+  // ##############
+  // append
   header.appendChild(headerContainer);
   // logo area
   headerContainer.appendChild(logoWrapper);
@@ -367,12 +291,11 @@ const Header = () => {
   navbarUl.appendChild(navbarEpisodeLi);
   navbarEpisodeLi.appendChild(navbarEpisodeSelect);
   navbarEpisodeSelect.appendChild(navbarEpisodeOptions);
-  // ******header Events******
-  // **sidebar events**
+
+  // ##############
+  // Events
   hamburgerButton.addEventListener("click", showSideNavbar);
   navbarCloseBtn.addEventListener("click", removeSideNavbar);
-  // **darkmode event**
-  // darkmode active
   activeDarkmode(
     darkModeBtnMoon,
     "body-darkmode",
@@ -387,9 +310,121 @@ const Header = () => {
     hamburgerImageBtn,
     header
   );
-  // return header elemenet for mounting
+
+  // ##############
+  // functions
+  // live search func
+  const LiveSearchInput = async (Event) => {
+    // if in box-container allready exist box searches , remove they for showing new results
+    let isBoxContainer = document.querySelector('.box-container');
+    let singleBoxes = document.querySelectorAll('.single-box'); 
+    if(isBoxContainer){
+      listUnMount(singleBoxes , isBoxContainer)
+    }
+    // get movie data from getAllMocies function
+    let moviesData = await GetAllMovies();
+    let searchValue = Event.target.value;
+    // search in movies data
+    let movieNameInfo = moviesData.filter(item => {
+      // if input had value - returned filter
+      if(searchValue){
+        return item.name.toLowerCase().includes(searchValue);
+      }else{
+        // if input had no value - else return null
+        return null
+      }
+    });
+    // send filter data for showSearchInputResult
+    showSearchInputResult(movieNameInfo)
+  };
+  // show search result in doc
+  const showSearchInputResult = (movieS) => {
+    // removing 2 thing , infinite scroll event and movies-slider
+    window.removeEventListener("scroll", infiniteScroll);
+    listUnMount(document.querySelectorAll(".movie-boxes"));
+    // if param had value 
+    if(movieS){
+      movieS.forEach(item => {
+        // for each item in list , call box component to show in doc searches
+        Mount(Box(item.name , item.image.medium , item.id) , document.getElementById("main-container"))
+      })
+    }
+
+    // check if movie-information
+    if(isMovieInfo){
+      isMovieInfo = false;
+      UnMount(document.querySelector('.movies-information-section') , document.querySelector('#main-container'))
+    }
+
+    // if input had no value
+    if(movieS.length === 0 || movieS === null || movieS === undefined){
+      let singleBoxes = document.querySelectorAll('.single-box')
+      listUnMount(singleBoxes , document.querySelector('.box-container'))
+      
+      window.addEventListener("scroll", infiniteScroll);
+      Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
+      Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
+    }
+  }
+  navbarInput.addEventListener('input' , LiveSearchInput)
+  // movies option value
+  const moviesOptionValue = async () => {
+    let movieData = await GetAllMovies();
+    navbarMoviesOptionOne.textContent = "select movie";
+    navbarMoviesSelect.appendChild(navbarMoviesOptionOne);
+
+    movieData.forEach((item) => {
+      let navbarMoviesOption = document.createElement("option", "m-option");
+      navbarMoviesOption.id = item.id;
+      navbarMoviesOption.textContent = item.name;
+      navbarMoviesOption.value = item.name;
+      navbarMoviesSelect.appendChild(navbarMoviesOption);
+
+    });
+    navbarMoviesSelect.addEventListener('change' , (Event) => {
+      if(isMovieInfo === false){
+        Mount(MoviesInformation(Event.target.value) , document.querySelector('#main-container'));
+      }
+      if(document.querySelector('.movies-information-section')){
+        UnMount(document.querySelector('.movies-information-section') , document.querySelector('#main-container'));
+        Mount(MoviesInformation(Event.target.value) , document.querySelector('#main-container'));
+      }
+      
+      if(isSideNavbarOpen){
+        document.querySelector('.Navbar-wrapper').classList.remove('show-sideNavbar');
+        isSideNavbarOpen = false;
+      }
+    })
+  };
+  moviesOptionValue();
+
+
+
+
+
+
+  const setEpisodes = async (id = 0) => {
+    let URL = `https://api.tvmaze.com/shows/${id}/episodes`;
+
+    try{
+      let response = await fetch(URL);
+      let json = await response.json();
+    }
+    catch(err){
+      console.log(err)
+    }
+  };
+  setEpisodes(169)
+
+  // return
   return header;
 };
+
+
+
+
+
+
 // ###-main-###
 const Main = () => {
   //create main elements
