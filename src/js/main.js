@@ -4,7 +4,7 @@ let isSideNavbarOpen = false;
 let isMovieInfo = false;
 window.addEventListener("DOMContentLoaded", App);
 function App() {
-  homeSetup()
+  homeSetup();
 }
 // home setup
 const homeSetup = (status) => {
@@ -12,7 +12,7 @@ const homeSetup = (status) => {
   Mount(Main());
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
-}
+};
 // mount Element
 const Mount = (element, place = root) => {
   place.appendChild(element);
@@ -27,8 +27,8 @@ const listUnMount = (element) => {
 };
 // reset input value
 const resetInput = (element) => {
-  element.value = '';
-}
+  element.value = "";
+};
 // ##get all movies , i get 321 becuse i get more then this number , chorm memory usage increased , increase 1GB , and makes site slow##
 const GetAllMovies = async () => {
   let movies;
@@ -191,7 +191,7 @@ const Header = () => {
   // navbar episode option
   let navbarEpisodeLi = document.createElement("li");
   let navbarEpisodeSelect = document.createElement("select");
-  let navbarEpisodeOptions = document.createElement("option");
+  let navbarEpisodeOptionsOne = document.createElement("option");
   // ###########################
   // **attributes**
   headerContainer.classList.add("container", "header-container");
@@ -250,7 +250,7 @@ const Header = () => {
   // navbar episode option area
   navbarEpisodeSelect.classList.add("episode-option");
   navbarEpisodeSelect.id = "episode-option";
-  navbarEpisodeOptions.textContent = "episode";
+  navbarEpisodeOptionsOne.textContent = "select episode";
   // ##############
   // append
   header.appendChild(headerContainer);
@@ -290,7 +290,7 @@ const Header = () => {
   // navbar episode option
   navbarUl.appendChild(navbarEpisodeLi);
   navbarEpisodeLi.appendChild(navbarEpisodeSelect);
-  navbarEpisodeSelect.appendChild(navbarEpisodeOptions);
+  navbarEpisodeSelect.appendChild(navbarEpisodeOptionsOne);
 
   // ##############
   // Events
@@ -316,57 +316,63 @@ const Header = () => {
   // live search func
   const LiveSearchInput = async (Event) => {
     // if in box-container allready exist box searches , remove they for showing new results
-    let isBoxContainer = document.querySelector('.box-container');
-    let singleBoxes = document.querySelectorAll('.single-box'); 
-    if(isBoxContainer){
-      listUnMount(singleBoxes , isBoxContainer)
+    let isBoxContainer = document.querySelector(".box-container");
+    let singleBoxes = document.querySelectorAll(".single-box");
+    if (isBoxContainer) {
+      listUnMount(singleBoxes, isBoxContainer);
     }
     // get movie data from getAllMocies function
     let moviesData = await GetAllMovies();
     let searchValue = Event.target.value;
     // search in movies data
-    let movieNameInfo = moviesData.filter(item => {
+    let movieNameInfo = moviesData.filter((item) => {
       // if input had value - returned filter
-      if(searchValue){
+      if (searchValue) {
         return item.name.toLowerCase().includes(searchValue);
-      }else{
+      } else {
         // if input had no value - else return null
-        return null
+        return null;
       }
     });
     // send filter data for showSearchInputResult
-    showSearchInputResult(movieNameInfo)
+    showSearchInputResult(movieNameInfo);
   };
   // show search result in doc
   const showSearchInputResult = (movieS) => {
     // removing 2 thing , infinite scroll event and movies-slider
     window.removeEventListener("scroll", infiniteScroll);
     listUnMount(document.querySelectorAll(".movie-boxes"));
-    // if param had value 
-    if(movieS){
-      movieS.forEach(item => {
+    // if param had value
+    if (movieS) {
+      movieS.forEach((item) => {
         // for each item in list , call box component to show in doc searches
-        Mount(Box(item.name , item.image.medium , item.id) , document.getElementById("main-container"))
-      })
+        Mount(
+          Box(item.name, item.image.medium, item.id),
+          document.getElementById("main-container")
+        );
+      });
     }
 
     // check if movie-information
-    if(isMovieInfo){
+    if (isMovieInfo) {
       isMovieInfo = false;
-      UnMount(document.querySelector('.movies-information-section') , document.querySelector('#main-container'))
+      UnMount(
+        document.querySelector(".movies-information-section"),
+        document.querySelector("#main-container")
+      );
     }
 
     // if input had no value
-    if(movieS.length === 0 || movieS === null || movieS === undefined){
-      let singleBoxes = document.querySelectorAll('.single-box')
-      listUnMount(singleBoxes , document.querySelector('.box-container'))
-      
+    if (movieS.length === 0 || movieS === null || movieS === undefined) {
+      let singleBoxes = document.querySelectorAll(".single-box");
+      listUnMount(singleBoxes, document.querySelector(".box-container"));
+
       window.addEventListener("scroll", infiniteScroll);
-      Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
-      Mount(MoviesBoxesSlider() , document.querySelector('#main-container'))
+      Mount(MoviesBoxesSlider(), document.querySelector("#main-container"));
+      Mount(MoviesBoxesSlider(), document.querySelector("#main-container"));
     }
-  }
-  navbarInput.addEventListener('input' , LiveSearchInput)
+  };
+  navbarInput.addEventListener("input", LiveSearchInput);
   // movies option value
   const moviesOptionValue = async () => {
     let movieData = await GetAllMovies();
@@ -379,51 +385,110 @@ const Header = () => {
       navbarMoviesOption.textContent = item.name;
       navbarMoviesOption.value = item.name;
       navbarMoviesSelect.appendChild(navbarMoviesOption);
-
     });
-    navbarMoviesSelect.addEventListener('change' , (Event) => {
-      if(isMovieInfo === false){
-        Mount(MoviesInformation(Event.target.value) , document.querySelector('#main-container'));
+
+    navbarMoviesSelect.addEventListener("change", (Event) => {
+      // mount and unmount document
+      if (isMovieInfo === false) {
+        Mount(
+          MoviesInformation(Event.target.value),
+          document.querySelector("#main-container")
+        );
       }
-      if(document.querySelector('.movies-information-section')){
-        UnMount(document.querySelector('.movies-information-section') , document.querySelector('#main-container'));
-        Mount(MoviesInformation(Event.target.value) , document.querySelector('#main-container'));
+      if (document.querySelector(".movies-information-section")) {
+        UnMount(
+          document.querySelector(".movies-information-section"),
+          document.querySelector("#main-container")
+        );
+        Mount(
+          MoviesInformation(Event.target.value),
+          document.querySelector("#main-container")
+        );
       }
-      
-      if(isSideNavbarOpen){
-        document.querySelector('.Navbar-wrapper').classList.remove('show-sideNavbar');
+      // side navbar condition
+      if (isSideNavbarOpen) {
+        document
+          .querySelector(".Navbar-wrapper")
+          .classList.remove("show-sideNavbar");
         isSideNavbarOpen = false;
       }
-    })
+      // get target movie
+      let targetMovie = movieData.filter((item) => {
+        if (Event.target.value !== "select movie") {
+          return item.name === Event.target.value;
+        }
+      });
+      setEpisodes(targetMovie);
+      // if movie changed remove old episodes and add new episods
+      if (document.querySelector(".episodes-element")) {
+        listUnMount(
+          document.querySelectorAll(".episodes-element"),
+          navbarEpisodeSelect
+        );
+      }
+      // if episode is mount
+      if(document.querySelector('.episode-section')){
+        UnMount(document.querySelector('.episode-section') , document.querySelector('#main-container'));
+        Mount(MoviesInformation(Event.target.value) , document.querySelector('#main-container'));
+        
+      }
+    });
   };
   moviesOptionValue();
 
-
-
-
-
-
-  const setEpisodes = async (id = 0) => {
-    let URL = `https://api.tvmaze.com/shows/${id}/episodes`;
-
-    try{
+  const setEpisodes = async (target) => {
+    let movieEpisode;
+    let movieData = await GetAllMovies();
+    let targetMovie = target;
+    let URL = `https://api.tvmaze.com/shows/${targetMovie[0].id}/episodes`;
+    // get episode
+    try {
       let response = await fetch(URL);
       let json = await response.json();
+      movieEpisode = await json;
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-    }
+    // show in dom
+    let showSetEpisodesInSelect = () => {
+      movieEpisode.forEach((item) => {
+        let episodeOptions = document.createElement("option");
+        episodeOptions.classList.add("episodes-element");
+        episodeOptions.textContent = item.name;
+        navbarEpisodeSelect.appendChild(episodeOptions);
+      });
+    };
+    showSetEpisodesInSelect();
+    navbarEpisodeSelect.addEventListener("change", (Event) => {
+      let currentEpisode = movieEpisode.filter(
+        (item) => item.name === Event.target.value
+      );
+      
+      if (document.querySelector(".movies-information-section")) {
+        UnMount(
+          document.querySelector(".movies-information-section"),
+          document.querySelector("#main-container")
+        );
+        Mount(
+          Episode(currentEpisode[0]),
+          document.querySelector("#main-container")
+        );
+      }
+
+      if(document.querySelector('.episode-section')){
+        UnMount(document.querySelector('.episode-section') , document.querySelector('#main-container'));
+        Mount(
+          Episode(currentEpisode[0]),
+          document.querySelector("#main-container")
+        );
+      }
+
+    });
   };
-  setEpisodes(169)
 
   // return
   return header;
 };
-
-
-
-
-
 
 // ###-main-###
 const Main = () => {
@@ -513,7 +578,7 @@ const MoviesInformation = (movieName) => {
     // backbtn event
     backButtonElement.addEventListener("click", () => {
       isMovieInfo = false;
-      resetInput(document.querySelector('#search'))
+      resetInput(document.querySelector("#search"));
       UnMount(
         moviesInformationSection,
         document.getElementById("main-container")
@@ -593,10 +658,65 @@ const MoviesInformation = (movieName) => {
   // return
   return moviesInformationSection;
 };
+// ##-episodes-##
+const Episode = (episode) => {
+  // create elements
+  let episodeSection = document.createElement("section");
+  let episodeSectionContainer = document.createElement("div");
+  let episodeImageContainer = document.createElement("div");
+  let episodeImage = document.createElement("img");
+  let episodeInformationContainer = document.createElement("div");
+  let episodeNameContainer = document.createElement("div");
+  let episodeName = document.createElement("h2");
+  let episodeSeasonContainer = document.createElement("div");
+  let episodeSeason = document.createElement("h4");
+  let episodeAirdateContainer = document.createElement("div");
+  let episodeAirdate = document.createElement("h5");
+  let episodeAvrageContainer = document.createElement("div");
+  let episodeAvrage = document.createElement("h5");
+  let episodeSummeryContainer = document.createElement("div");
+
+  // attributes
+  episodeSection.classList.add("episode-section");
+  episodeSectionContainer.classList.add("container", "episode-container");
+  episodeImageContainer.classList.add("episode-img-container");
+  episodeImage.classList.add("episode-img");
+  episodeImage.alt = "episode image";
+  episodeImage.src = episode.image.medium;
+  episodeInformationContainer.classList.add("episode-informations-container");
+  episodeNameContainer.classList.add("episode-name");
+  episodeName.textContent = `episode name : ${episode.name}`;
+  episodeSeasonContainer.classList.add("episode-season");
+  episodeSeason.textContent = `season : ${episode.season}`;
+  episodeAirdateContainer.classList.add("episode-airdate");
+  episodeAirdate.textContent = `airdate : ${episode.airdate}`;
+  episodeAvrageContainer.classList.add("episode-avrage");
+  episodeAvrage.textContent = `average : ${episode.rating.average}`;
+  episodeSummeryContainer.classList.add("episode-summery");
+  episodeSummeryContainer.innerHTML = episode.summary;
+
+  // append
+  episodeSection.appendChild(episodeSectionContainer);
+  episodeSectionContainer.appendChild(episodeImageContainer);
+  episodeImageContainer.appendChild(episodeImage);
+  episodeSectionContainer.appendChild(episodeInformationContainer);
+  episodeInformationContainer.appendChild(episodeNameContainer);
+  episodeNameContainer.appendChild(episodeName);
+  episodeInformationContainer.appendChild(episodeSeasonContainer);
+  episodeSeasonContainer.appendChild(episodeSeason);
+  episodeInformationContainer.appendChild(episodeAirdateContainer);
+  episodeAirdateContainer.appendChild(episodeAirdate);
+  episodeInformationContainer.appendChild(episodeAvrageContainer);
+  episodeAvrageContainer.appendChild(episodeAvrage);
+  episodeInformationContainer.appendChild(episodeSummeryContainer);
+
+  // return
+  return episodeSection;
+};
 // ##-Box-##
-let boxContainer = document.createElement('section');
-boxContainer.classList.add('box-container' , "single-box-container");
-const Box = (name , src , id) => {
+let boxContainer = document.createElement("section");
+boxContainer.classList.add("box-container", "single-box-container");
+const Box = (name, src, id) => {
   let moviesBox = document.createElement("div");
   let moviesBoxImgContainer = document.createElement("div");
   let moviesBoxImg = document.createElement("img");
@@ -611,21 +731,23 @@ const Box = (name , src , id) => {
   moviesBoxImg.id = id;
   moviesBoxTitleContainer.classList.add("single-box-title-container");
   moviesBoxTitleH3.textContent = name;
-  moviesBoxTitleH3.classList.add('box-name')
+  moviesBoxTitleH3.classList.add("box-name");
 
   // append
-  boxContainer.appendChild(moviesBox)
+  boxContainer.appendChild(moviesBox);
   moviesBox.appendChild(moviesBoxImgContainer);
   moviesBoxImgContainer.appendChild(moviesBoxImg);
   moviesBox.appendChild(moviesBoxTitleContainer);
   moviesBoxTitleContainer.appendChild(moviesBoxTitleH3);
 
   // event
-  moviesBox.addEventListener('click' , () => {
-    resetInput(document.querySelector('#search'))
-    UnMount(boxContainer , document.querySelector('#main-container'));
-    Mount(MoviesInformation(name) , document.querySelector('#main-container'));
-  })
+  moviesBox.addEventListener("click", () => {
+    resetInput(document.querySelector("#search"));
+    UnMount(boxContainer, document.querySelector("#main-container"));
+    Mount(MoviesInformation(name), document.querySelector("#main-container"));
+
+
+  });
 
   // return
   return boxContainer;
