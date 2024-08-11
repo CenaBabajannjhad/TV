@@ -12,6 +12,7 @@ const homeSetup = (status) => {
   Mount(Main());
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
   Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
+  Mount(MoviesBoxesSlider(), document.getElementById("main-container"));
 };
 // mount Element
 const Mount = (element, place = root) => {
