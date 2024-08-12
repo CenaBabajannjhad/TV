@@ -371,6 +371,7 @@ const Header = () => {
       window.addEventListener("scroll", infiniteScroll);
       Mount(MoviesBoxesSlider(), document.querySelector("#main-container"));
       Mount(MoviesBoxesSlider(), document.querySelector("#main-container"));
+      Mount(MoviesBoxesSlider(), document.querySelector("#main-container"));
     }
   };
   navbarInput.addEventListener("input", LiveSearchInput);
